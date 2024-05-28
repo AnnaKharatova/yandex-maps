@@ -9,3 +9,11 @@ body {
 
 }
 
+[class*='ground-pane'] {
+    filter:grayscale(1)
+}
+
+
+[class*='balloon']{
+    border-radius: 20px;
+}
