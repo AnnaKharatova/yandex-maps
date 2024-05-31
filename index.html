@@ -11,9 +11,45 @@
 
 <body>
     <div class="map-container" id="map">
-        <h1>Контакты</h1>
+        <h1>Главная страница</h1>
+        <form class="search-form">
+            <div class="search-form__item">
+                <h2 class="search-form__title">Kamaz</h2>
+                <div>
+                    <input type="checkbox" id="KAMAZ_R6" name="KAMAZ_R6" value="KAMAZ_R6" />
+                    <label for="KAMAZ_R6">KAMAZ_R6</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="KAMAZ_740" name="KAMAZ_740" value="KAMAZ_740" />
+                    <label for="KAMAZ_740">KAMAZ_740</label>
+                </div>
+            </div>
+            <div class="search-form__item">
+                <h2 class="search-form__title">Cummins</h2>
+                <div>
+                    <input type="checkbox" id="Cummins_6.7" name="Cummins_6.7" value="Cummins_6.7" />
+                    <label for="Cummins_6.7">Cummins_6.7</label>
+                </div>
+            </div>
+            <div class="search-form__item">
+                <h2 class="search-form__title">YAMZ</h2>
+                <div>
+                    <input type="checkbox" id="YAMZ" name="YAMZ" value="YAMZ" />
+                    <label for="YAMZ">YAMZ</label>
+                </div>
+            </div>
+            <div class="search-form__item">
+                <h2 class="search-form__title">Mersedes</h2>
+                <div>
+                    <input type="checkbox" id="Mersedes_457_LA" name="Mersedes_457_LA" value="Mersedes_457_LA" />
+                    <label for="Mersedes_457_LA">Mersedes_457_LA</label>
+                </div>
+            </div>
+        </form>
+        <p>Находим магазины, в которых есть те товары, которые отмечены галочкой (можно сделать так, чтобы были в наличии только все отмеченные)</p>
         <script src="https://api-maps.yandex.ru/2.1/?apikey=ваш API-ключ&lang=ru_RU"></script>
     </div>
     <script src="script.js"></script>
 </body>
+
 </html>

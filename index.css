@@ -17,3 +17,25 @@ body {
 [class*='balloon']{
     border-radius: 20px;
 }
+
+
+.search-form {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    width: 100%;
+    padding-bottom: 20px;
+    justify-content: space-between;
+   }
+.search-form__item {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+}
+
+.search-form__button {
+    align-self: center;
+width: 100px;
+height: 40px;
+margin-right: 20px;
+   }
