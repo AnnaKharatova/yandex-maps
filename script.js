@@ -119,115 +119,114 @@ fetch('http://158.160.154.213/api/stores/')
     .then(res => res.json())
     .then(resData => {
         fetchedData = JSON.parse(JSON.stringify(resData))
-
-
-        function init() {
-            navigator.geolocation.getCurrentPosition(function (position) {
-                const map = new ymaps.Map('map', {
-                    center: [position.coords.latitude, position.coords.longitude],
-                    zoom: 8,
-                });
-
-                map.controls.remove('trafficControl')
-                map.controls.remove('typeSelector');
-                map.controls.add('routePanelControl', {
-                    float: 'right'
-                });
-                const control = map.controls.get('routePanelControl')
-                control.routePanel.state.set({
-                    type: 'auto',
-                    fromEnabled: true,
-                    toEnabled: true,
-                })
-
-                control.routePanel.options.set({
-                    types: {
-
-                        auto: true,
-                        pedestrian: true,
-                    }
-                })
-
-                console.log(fetchedData)
-
-                storeList.forEach(store => {
-                    let placemark = new ymaps.Placemark([store.latitude, store.longitude], {
-                        balloonContentHeader: store.name,
-                        balloonContentBody: `<p>Адрес: ${store.address}</p> <p>Тел:${store.phone}</p> <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p><button class="route-button">Построить маршрут</button>`,
-                        balloonContentFooter: `Наш сайт: <a href=${store.website}>${store.website}</a>`
-                    }, {
-                        iconLayout: 'default#image',
-                        iconImageHref: 'https://cdn-icons-png.flaticon.com/512/15219/15219090.png',
-                        iconImageSize: [40, 40],
-                        iconImageOffset: [0, 0]
-                    });
-
-                    placemark.events.add('balloonopen', () => {
-                        const button = document.querySelector('.route-button');
-                        button.addEventListener('click', () => {
-                            storeLocation = store.address;
-
-                            let location = ymaps.geolocation.get();
-                            location.then(function (res) {
-                                let locationText = res.geoObjects.get(0).properties.get('text');
-
-                                control.routePanel.state.set({
-                                    from: locationText,
-                                    to: `${store.latitude},${store.longitude}`
-                                });
-                            });
-                            console.log('click');
-                        });
-                    });
-                    map.geoObjects.add(placemark);
-                });
-
-                let filteredStoreList;
-
-                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-
-                function filterStoreList() {
-                    const selectedParts = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
-                    filteredStoreList = storeList.filter(store => {
-                        return selectedParts.some(selectedPart => {
-                            return store.parts_available.some(part => part.name === selectedPart);
-                        });
-                    });
-                }
-
-                checkboxes.forEach(checkbox => {
-                    checkbox.addEventListener('change', () => {
-                        filterStoreList()
-                        displayStores()
-                    });
-                });
-
-                function displayStores() {
-                    map.geoObjects.removeAll();
-                    const array = filteredStoreList.length == 0 ? storeList : filteredStoreList
-                    array.forEach(store => {
-                        const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
-                            balloonContentHeader: store.name,
-                            balloonContentBody: `<p>Адрес: ${store.address}</p> <p>Тел:${store.phone}</p> <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p><button class="route-button">Построить маршрут</button>`,
-                            balloonContentFooter: `Наш сайт: <a href=${store.website}>${store.website}</a>`
-                        }, {
-                            iconLayout: 'default#image',
-                            iconImageHref: 'https://cdn-icons-png.flaticon.com/512/15219/15219090.png',
-                            iconImageSize: [40, 40],
-                            iconImageOffset: [0, 0]
-                        });
-
-                        map.geoObjects.add(placemark);
-                    });
-                }
-
-            })
-
-        }
-        ymaps.ready(init);
-    }).catch(e => {
+        console.log(fetchedData)
+    })
+    .catch(e => {
         console.error(e)
     })
+
+function init() {
+    navigator.geolocation.getCurrentPosition(function (position) {
+        const map = new ymaps.Map('map', {
+            center: [position.coords.latitude, position.coords.longitude],
+            zoom: 8,
+        });
+
+        map.controls.remove('trafficControl')
+        map.controls.remove('typeSelector');
+        map.controls.add('routePanelControl', {
+            float: 'right'
+        });
+        const control = map.controls.get('routePanelControl')
+        control.routePanel.state.set({
+            type: 'auto',
+            fromEnabled: true,
+            toEnabled: true,
+        })
+
+        control.routePanel.options.set({
+            types: {
+
+                auto: true,
+                pedestrian: true,
+            }
+        })
+
+        storeList.forEach(store => {
+            let placemark = new ymaps.Placemark([store.latitude, store.longitude], {
+                balloonContentHeader: store.name,
+                balloonContentBody: `<p>Адрес: ${store.address}</p> <p>Тел:${store.phone}</p> <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p><button class="route-button">Построить маршрут</button>`,
+                balloonContentFooter: `Наш сайт: <a href=${store.website}>${store.website}</a>`
+            }, {
+                iconLayout: 'default#image',
+                iconImageHref: 'https://cdn-icons-png.flaticon.com/512/15219/15219090.png',
+                iconImageSize: [40, 40],
+                iconImageOffset: [0, 0]
+            });
+
+            placemark.events.add('balloonopen', () => {
+                const button = document.querySelector('.route-button');
+                button.addEventListener('click', () => {
+                    storeLocation = store.address;
+
+                    let location = ymaps.geolocation.get();
+                    location.then(function (res) {
+                        let locationText = res.geoObjects.get(0).properties.get('text');
+
+                        control.routePanel.state.set({
+                            from: locationText,
+                            to: `${store.latitude},${store.longitude}`
+                        });
+                    });
+                    console.log('click');
+                });
+            });
+            map.geoObjects.add(placemark);
+        });
+
+        let filteredStoreList;
+
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+
+        function filterStoreList() {
+            const selectedParts = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+            filteredStoreList = storeList.filter(store => {
+                return selectedParts.some(selectedPart => {
+                    return store.parts_available.some(part => part.name === selectedPart);
+                });
+            });
+        }
+
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', () => {
+                filterStoreList()
+                displayStores()
+            });
+        });
+
+        function displayStores() {
+            map.geoObjects.removeAll();
+            const array = filteredStoreList.length == 0 ? storeList : filteredStoreList
+            array.forEach(store => {
+                const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
+                    balloonContentHeader: store.name,
+                    balloonContentBody: `<p>Адрес: ${store.address}</p> <p>Тел:${store.phone}</p> <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p><button class="route-button">Построить маршрут</button>`,
+                    balloonContentFooter: `Наш сайт: <a href=${store.website}>${store.website}</a>`
+                }, {
+                    iconLayout: 'default#image',
+                    iconImageHref: 'https://cdn-icons-png.flaticon.com/512/15219/15219090.png',
+                    iconImageSize: [40, 40],
+                    iconImageOffset: [0, 0]
+                });
+
+                map.geoObjects.add(placemark);
+            });
+        }
+
+    })
+
+}
+ymaps.ready(init);
 
 
 
