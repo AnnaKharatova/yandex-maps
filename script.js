@@ -148,12 +148,9 @@ fetch('http://158.160.154.213/api/stores/')
                     }
                 })
 
-                const dataList = fetchedData ? fetchedData : storeList
+                console.log(fetchedData)
 
-                console.log(dataList)
-
-
-                dataList.forEach(store => {
+                storeList.forEach(store => {
                     let placemark = new ymaps.Placemark([store.latitude, store.longitude], {
                         balloonContentHeader: store.name,
                         balloonContentBody: `<p>Адрес: ${store.address}</p> <p>Тел:${store.phone}</p> <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p><button class="route-button">Построить маршрут</button>`,
@@ -170,7 +167,6 @@ fetch('http://158.160.154.213/api/stores/')
                         button.addEventListener('click', () => {
                             storeLocation = store.address;
 
-
                             let location = ymaps.geolocation.get();
                             location.then(function (res) {
                                 let locationText = res.geoObjects.get(0).properties.get('text');
@@ -179,10 +175,7 @@ fetch('http://158.160.154.213/api/stores/')
                                     from: locationText,
                                     to: `${store.latitude},${store.longitude}`
                                 });
-
                             });
-
-
                             console.log('click');
                         });
                     });
@@ -195,7 +188,7 @@ fetch('http://158.160.154.213/api/stores/')
 
                 function filterStoreList() {
                     const selectedParts = Array.from(document.querySelectorAll('input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
-                    filteredStoreList = dataList.filter(store => {
+                    filteredStoreList = storeList.filter(store => {
                         return selectedParts.some(selectedPart => {
                             return store.parts_available.some(part => part.name === selectedPart);
                         });
@@ -211,7 +204,7 @@ fetch('http://158.160.154.213/api/stores/')
 
                 function displayStores() {
                     map.geoObjects.removeAll();
-                    const array = filteredStoreList.length == 0 ? dataList : filteredStoreList
+                    const array = filteredStoreList.length == 0 ? storeList : filteredStoreList
                     array.forEach(store => {
                         const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
                             balloonContentHeader: store.name,
