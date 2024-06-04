@@ -113,7 +113,7 @@ const storeList = [
     }
 ]
 
-let fetchedData
+/* let fetchedData
 
 fetch('http://158.160.154.213/api/stores/')
     .then(res => res.json())
@@ -123,21 +123,22 @@ fetch('http://158.160.154.213/api/stores/')
     })
     .catch(e => {
         console.error(e)
-    })
+    }) */
+
+/* MAP */
 
 function init() {
     navigator.geolocation.getCurrentPosition(function (position) {
         const map = new ymaps.Map('map', {
             center: [position.coords.latitude, position.coords.longitude],
             zoom: 8,
+            controls: ['smallMapDefaultSet', 'routeButtonControl']
         });
 
         map.controls.remove('trafficControl')
         map.controls.remove('typeSelector');
-        map.controls.add('routePanelControl', {
-            float: 'right'
-        });
-        const control = map.controls.get('routePanelControl')
+
+        const control = map.controls.get('routeButtonControl')
         control.routePanel.state.set({
             type: 'auto',
             fromEnabled: true,
@@ -146,43 +147,46 @@ function init() {
 
         control.routePanel.options.set({
             types: {
-
                 auto: true,
                 pedestrian: true,
             }
         })
 
-        storeList.forEach(store => {
-            let placemark = new ymaps.Placemark([store.latitude, store.longitude], {
-                balloonContentHeader: store.name,
-                balloonContentBody: `<p>Адрес: ${store.address}</p> <p>Тел:${store.phone}</p> <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p><button class="route-button">Построить маршрут</button>`,
-                balloonContentFooter: `Наш сайт: <a href=${store.website}>${store.website}</a>`
-            }, {
-                iconLayout: 'default#image',
-                iconImageHref: 'https://cdn-icons-png.flaticon.com/512/15219/15219090.png',
-                iconImageSize: [40, 40],
-                iconImageOffset: [0, 0]
-            });
-
-            placemark.events.add('balloonopen', () => {
-                const button = document.querySelector('.route-button');
-                button.addEventListener('click', () => {
-                    storeLocation = store.address;
-
-                    let location = ymaps.geolocation.get();
-                    location.then(function (res) {
-                        let locationText = res.geoObjects.get(0).properties.get('text');
-
-                        control.routePanel.state.set({
-                            from: locationText,
-                            to: `${store.latitude},${store.longitude}`
-                        });
-                    });
-                    console.log('click');
+        function addPlacemark(storeList) {
+            storeList.forEach(store => {
+                const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
+                    balloonContentHeader: store.name,
+                    balloonContentBody: `<p>Адрес: ${store.address}</p> <p>Тел:${store.phone}</p> <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p><button class="route-button">Построить маршрут</button>`,
+                    balloonContentFooter: `Наш сайт: <a href=${store.website}>${store.website}</a>`
+                }, {
+                    iconLayout: 'default#image',
+                    iconImageHref: 'https://cdn-icons-png.flaticon.com/512/15219/15219090.png',
+                    iconImageSize: [40, 40],
+                    iconImageOffset: [0, 0]
                 });
+
+                placemark.events.add('balloonopen', () => {
+                    const button = document.querySelector('.route-button');
+                    button.addEventListener('click', () => {
+                        storeLocation = store.address;
+
+                        let location = ymaps.geolocation.get();
+                        location.then(function (res) {
+                            let locationText = res.geoObjects.get(0).properties.get('text');
+
+                            control.routePanel.state.set({
+                                from: locationText,
+                                to: `${store.latitude},${store.longitude}`
+                            });
+                        });
+                        console.log('click');
+                    });
+                });
+                map.geoObjects.add(placemark);
             });
-            map.geoObjects.add(placemark);
-        });
+        }
+
+        addPlacemark(storeList)
 
         let filteredStoreList;
 
@@ -207,27 +211,26 @@ function init() {
         function displayStores() {
             map.geoObjects.removeAll();
             const array = filteredStoreList.length == 0 ? storeList : filteredStoreList
-            array.forEach(store => {
-                const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
-                    balloonContentHeader: store.name,
-                    balloonContentBody: `<p>Адрес: ${store.address}</p> <p>Тел:${store.phone}</p> <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p><button class="route-button">Построить маршрут</button>`,
-                    balloonContentFooter: `Наш сайт: <a href=${store.website}>${store.website}</a>`
-                }, {
-                    iconLayout: 'default#image',
-                    iconImageHref: 'https://cdn-icons-png.flaticon.com/512/15219/15219090.png',
-                    iconImageSize: [40, 40],
-                    iconImageOffset: [0, 0]
-                });
-
-                map.geoObjects.add(placemark);
-            });
+            addPlacemark(array)
         }
-
     })
-
 }
+
+
+
 ymaps.ready(init);
 
+const popupMenu = document.querySelector(".popup-menu")
+
+const burgerButton = document.getElementById('header-nav-burger');
+burgerButton.addEventListener('click', () => {
+    popupMenu.classList.remove("display-none")
+});
+
+const popupCloseButton = document.getElementById('popup-menu-close');
+popupCloseButton.addEventListener('click', () => {
+    popupMenu.classList.add("display-none")
+});
 
 
 
@@ -240,8 +243,4 @@ ymaps.ready(init);
   map.controls.remove('zoomControl'); // удаляем контрол зуммирования
   map.controls.remove('rulerControl'); // удаляем контрол правил
   map.behaviors.disable(['scrollZoom']); // отключаем скролл карты (опционально)
-  
-  CSS: [class*="copyrights-pane"] {
-  display: none !important;
-}
  */

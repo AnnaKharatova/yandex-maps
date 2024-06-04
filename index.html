@@ -10,45 +10,87 @@
 </head>
 
 <body>
-    <div class="map-container" id="map">
-        <h1>Главная страница</h1>
-        <form class="search-form">
-            <div class="search-form__item">
-                <h2 class="search-form__title">Kamaz</h2>
-                <div>
-                    <input type="checkbox" id="KAMAZ_R6" name="KAMAZ_R6" value="KAMAZ_R6" />
-                    <label for="KAMAZ_R6">KAMAZ_R6</label>
-                </div>
-                <div>
-                    <input type="checkbox" id="KAMAZ_740" name="KAMAZ_740" value="KAMAZ_740" />
-                    <label for="KAMAZ_740">KAMAZ_740</label>
-                </div>
+    <div class="popup-menu display-none ">
+        <div class="header">
+            <div class="header__main">
+                <div class="header__logo"></div>
+                <p class="header__title">Имя сайта</p>
             </div>
-            <div class="search-form__item">
-                <h2 class="search-form__title">Cummins</h2>
-                <div>
-                    <input type="checkbox" id="Cummins_6.7" name="Cummins_6.7" value="Cummins_6.7" />
-                    <label for="Cummins_6.7">Cummins_6.7</label>
-                </div>
-            </div>
-            <div class="search-form__item">
-                <h2 class="search-form__title">YAMZ</h2>
-                <div>
-                    <input type="checkbox" id="YAMZ" name="YAMZ" value="YAMZ" />
-                    <label for="YAMZ">YAMZ</label>
-                </div>
-            </div>
-            <div class="search-form__item">
-                <h2 class="search-form__title">Mersedes</h2>
-                <div>
-                    <input type="checkbox" id="Mersedes_457_LA" name="Mersedes_457_LA" value="Mersedes_457_LA" />
-                    <label for="Mersedes_457_LA">Mersedes_457_LA</label>
-                </div>
-            </div>
-        </form>
-        <p>Находим магазины, в которых есть те товары, которые отмечены галочкой (можно сделать так, чтобы были в наличии все отмеченные сразу)</p>
-        <script src="https://api-maps.yandex.ru/2.1/?apikey=6fb19312-2127-40e5-8c22-75d1f84f2daa&lang=ru_RU"></script>
+            <button class="popup-menu__close" id="popup-menu-close"></button>
+        </div>
+        <nav class="popup-menu__main">
+            <p>Каталог</p>
+            <p>Телефон</p>
+            <p>Добавить партнера</p>
+            <p>Пользовательское соглашение</p>
+            <p>Контакты компании</p>
+        </nav>
     </div>
+
+    <header class="header">
+        <div class="header__main">
+            <div class="header__logo"></div>
+            <p class="header__title">Имя сайта</p>
+        </div>
+        <button class="header__nav-burger" id="header-nav-burger"></button>
+    </header>
+    <main>
+        <div class="bunner">Баннер</div>
+        <h1 class="title">Официальные партнёры завода</h1>
+        <div class="filter-buttons">
+            <button class="filter-buttons__button" id="partner-filter">Все партнеры</button>
+            <button class="filter-buttons__button" id="item-filter">Тип двигателя</button>
+            <button class="filter-buttons__button" id="city-filter">Город</button>
+        </div>
+
+        <div class="map__container" id="map">
+            <script
+                src="https://api-maps.yandex.ru/2.1/?apikey=6fb19312-2127-40e5-8c22-75d1f84f2daa&lang=ru_RU"></script>
+            <button class="map__button"> Список партнеров</button>
+        </div>
+    </main>
+    <footer class="footer">
+        Footer
+    </footer>
+
+
+
+    <form class="filter">
+        <div class="filter__item">
+            <h2 class="filter__title">Kamaz</h2>
+            <div>
+                <input type="checkbox" id="KAMAZ_R6" name="KAMAZ_R6" value="KAMAZ_R6" />
+                <label for="KAMAZ_R6">KAMAZ_R6</label>
+            </div>
+            <div>
+                <input type="checkbox" id="KAMAZ_740" name="KAMAZ_740" value="KAMAZ_740" />
+                <label for="KAMAZ_740">KAMAZ_740</label>
+            </div>
+        </div>
+        <div class="filter__item">
+            <h2 class="filter__title">Cummins</h2>
+            <div>
+                <input type="checkbox" id="Cummins_6.7" name="Cummins_6.7" value="Cummins_6.7" />
+                <label for="Cummins_6.7">Cummins_6.7</label>
+            </div>
+        </div>
+        <div class="filter__item">
+            <h2 class="filter__title">YAMZ</h2>
+            <div>
+                <input type="checkbox" id="YAMZ" name="YAMZ" value="YAMZ" />
+                <label for="YAMZ">YAMZ</label>
+            </div>
+        </div>
+        <div class="filter__item">
+            <h2 class="filter__title">Mersedes</h2>
+            <div>
+                <input type="checkbox" id="Mersedes_457_LA" name="Mersedes_457_LA" value="Mersedes_457_LA" />
+                <label for="Mersedes_457_LA">Mersedes_457_LA</label>
+            </div>
+        </div>
+    </form>
+
+
     <script src="script.js"></script>
 </body>
 
