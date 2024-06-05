@@ -113,9 +113,9 @@ const storeList = [
     }
 ]
 
-/* let fetchedData
+let fetchedData
 
-fetch('http://158.160.154.213/api/stores/')
+fetch('http://158.160.154.213/api/partners/')
     .then(res => res.json())
     .then(resData => {
         fetchedData = JSON.parse(JSON.stringify(resData))
@@ -123,7 +123,7 @@ fetch('http://158.160.154.213/api/stores/')
     })
     .catch(e => {
         console.error(e)
-    }) */
+    })
 
 /* MAP */
 
