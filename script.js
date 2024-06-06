@@ -115,6 +115,8 @@ const storeList = [
 
 const citiesArray = ["Москва", "Санкт-Петербург", "Ярославль", "Чебоксары", "Люберцы", "Курск", "Балаково"]
 
+
+
 let fetchedData
 
 fetch('http://158.160.154.213/api/partners/')
@@ -136,6 +138,15 @@ function init() {
             zoom: 8,
             controls: ['smallMapDefaultSet', 'routeButtonControl']
         });
+
+        let filteredStoreList = [];
+
+        function findCity(city) {
+            const array = filteredStoreList.length == 0 ? storeList : filteredStoreList
+            return array.filter(item => {
+                return item.address.toLowerCase().includes(city.toLowerCase());
+            });
+        }
 
         function getCenter(city) {
             ymaps.geocode(city)
@@ -159,6 +170,18 @@ function init() {
         }) */
 
         const searchInput = document.getElementById('city-input');
+
+        function createPartnersList(address) {
+            const li = document.createElement('li');
+            li.textContent = address;
+            li.classList.add('popup-filter__city')
+            partnersListContainer.appendChild(li);
+            li.addEventListener('click', function () {
+                popupPartnersList.style.display = "none";
+                getCenter(address)
+            })
+        }
+
         function filterCities() {
             const searchText = searchInput.value.toLowerCase();
             const filteredCities = citiesArray.filter(city => city.toLowerCase().startsWith(searchText));
@@ -174,6 +197,13 @@ function init() {
                     searchInput.value = ''
                     filterCities()
                     getCenter(city)
+                    const filteredByCities = findCity(city)
+                    console.log(filteredByCities)
+                    partnersListContainer.innerHTML = ''
+                    filteredByCities.forEach(item => {
+                        console.log(item)
+                        createPartnersList(item.address)
+                    })
                 })
             });
         }
@@ -197,6 +227,8 @@ function init() {
                 pedestrian: true,
             }
         })
+
+
 
         function addPlacemark(storeList) {
             storeList.forEach(store => {
@@ -229,17 +261,10 @@ function init() {
                     });
                 });
                 map.geoObjects.add(placemark);
-                    const li = document.createElement('li');
-                    li.textContent = store.address;
-                    li.classList.add('popup-filter__city')
-                    partnersListContainer.appendChild(li);
-                    li.addEventListener('click', function () {
-                        popupPartnersList.style.display = "none";
-                        getCenter(store.address)
-                        placemark.balloon.open()
-                    })
-                
-                
+
+                createPartnersList(store.address)
+
+
                 const partnersListButton = document.getElementById('partners-list-button')
                 const popupPartnersList = document.getElementById('popup-partners-list')
                 const closeButtonPartnersList = document.getElementsByClassName("popup-filter__close-button")[3];
@@ -257,7 +282,6 @@ function init() {
 
         addPlacemark(storeList)
 
-        let filteredStoreList;
 
         const checkboxes = document.querySelectorAll('input[type="checkbox"]');
 
