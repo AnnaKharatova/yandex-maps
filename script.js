@@ -340,13 +340,6 @@ closeButtonCity.addEventListener("click", function () {
     searchInput.value = ''
 });
 
-
-
-
-
-
-
-
 /*  map.controls.remove('geolocationControl'); // удаляем геолокацию
   map.controls.remove('searchControl'); // удаляем поиск
   map.controls.remove('trafficControl'); // удаляем контроль трафика
@@ -356,3 +349,40 @@ closeButtonCity.addEventListener("click", function () {
   map.controls.remove('rulerControl'); // удаляем контрол правил
   map.behaviors.disable(['scrollZoom']); // отключаем скролл карты (опционально)
  */
+
+
+
+  let isPopupOpen = false;
+    let startY = 0;
+    const popupElement = document.querySelector('.popup-filter__content');
+    const overlayElement = document.querySelector('.popup-filter');
+
+    function openPopup() {
+      popupElement.style.display = 'block';
+      overlayElement.style.display = 'block';
+      isPopupOpen = true;
+    }
+
+    function closePopup() {
+      popupElement.style.display = 'none';
+      overlayElement.style.display = 'none';
+      isPopupOpen = false;
+    }
+
+    popupElement.addEventListener('touchstart', (event) => {
+      if (isPopupOpen) {
+        startY = event.touches[0].clientY;
+      }
+    });
+
+    popupElement.addEventListener('touchmove', (event) => {
+      if (isPopupOpen) {
+        const currentY = event.touches[0].clientY;
+        const deltaY = currentY - startY;
+
+        // Проверяем, был ли выполнен жест смахивания вниз
+        if (deltaY > 100) {
+          closePopup();
+        }
+      }
+    });
