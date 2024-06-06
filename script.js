@@ -358,6 +358,22 @@ document.addEventListener('touchmove', (event) => {
   }
 });
 
+const popup = document.querySelectorAll('.popup-filter__content');
+const overlay = document.querySelectorAll('.popup-filter');
+
+
+overlay.forEach(item => {
+    item.addEventListener('click', function() {
+        item.style.display = 'none';
+    });
+})
+
+popup.forEach(item => {
+    item.addEventListener('click', function(event) {
+        event.stopPropagation();
+    });
+})
+
 /*  map.controls.remove('geolocationControl'); // удаляем геолокацию
   map.controls.remove('searchControl'); // удаляем поиск
   map.controls.remove('trafficControl'); // удаляем контроль трафика
