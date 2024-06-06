@@ -113,6 +113,8 @@ const storeList = [
     }
 ]
 
+const citiesArray = ["Москва", "Санкт-Петербург", "Ярославль", "Чебоксары", "Люберцы", "Курск", "Балаково"]
+
 let fetchedData
 
 fetch('http://158.160.154.213/api/partners/')
@@ -135,8 +137,52 @@ function init() {
             controls: ['smallMapDefaultSet', 'routeButtonControl']
         });
 
+        function getCenter(city) {
+            ymaps.geocode(city)
+                .then(function (result) {
+                    const coords = result.geoObjects.get(0).geometry.getCoordinates();
+                    map.setCenter(coords, 10);
+                })
+                .catch(function (error) {
+                    console.log('Ошибка геокодирования:', error);
+                });
+        }
+
+        /* citiesArray.map(city => {
+            const cityName = document.createElement('li');
+            cityName.textContent = city;
+            citiesList.appendChild(cityName);
+            cityName.addEventListener('click', function () {
+                cityFilterPopup.style.display = "none";
+                getCenter(city)
+            })
+        }) */
+
+        const searchInput = document.getElementById('city-input');
+        function filterCities() {
+            const searchText = searchInput.value.toLowerCase();
+            const filteredCities = citiesArray.filter(city => city.toLowerCase().startsWith(searchText));
+            citiesList.innerHTML = '';
+            const cityArray = filteredCities ? filteredCities : citiesArray
+            cityArray.forEach(city => {
+                const li = document.createElement('li');
+                li.textContent = city;
+                li.classList.add('popup-filter__city')
+                citiesList.appendChild(li);
+                li.addEventListener('click', function () {
+                    cityFilterPopup.style.display = "none";
+                    searchInput.value = ''
+                    filterCities() 
+                    getCenter(city)
+                })
+            });
+        }
+        filterCities() 
+        searchInput.addEventListener('input', filterCities);
+
         map.controls.remove('trafficControl')
         map.controls.remove('typeSelector');
+        map.controls.remove("taxi")
 
         const control = map.controls.get('routeButtonControl')
         control.routePanel.state.set({
@@ -216,9 +262,9 @@ function init() {
     })
 }
 
-
-
 ymaps.ready(init);
+
+/* Бургер Меню */
 
 const popupMenu = document.querySelector(".popup-menu")
 
@@ -231,6 +277,71 @@ const popupCloseButton = document.getElementById('popup-menu-close');
 popupCloseButton.addEventListener('click', () => {
     popupMenu.classList.add("display-none")
 });
+
+/* Фильтр по типу двигателя */
+
+const filterPopup = document.getElementById("popup-engine-filter");
+const closeButtonEngine = document.getElementsByClassName("popup-filter__close-button")[0];
+const engineFilterButton = document.getElementById("engine-filter");
+const submitEngineFilterButton = document.getElementById("engine-filter-submit-button");
+
+engineFilterButton.addEventListener("click", function () {
+    filterPopup.style.display = "block";
+});
+
+closeButtonEngine.addEventListener("click", function () {
+    filterPopup.style.display = "none";
+});
+
+window.addEventListener("touchstart", function (event) {
+    if (event.touches.clientY < 50) {
+        filterPopup.style.display = "none";
+    }
+});
+
+submitEngineFilterButton.addEventListener("click", function (event) {
+    event.preventDefault()
+    filterPopup.style.display = "none";
+});
+
+/* Фильтр по партнерам */
+
+
+const partnersFilterPopup = document.getElementById("popup-partners-filter");
+const partnersFilterButton = document.getElementById("partner-filter");
+const closeButtonPartners = document.getElementsByClassName("popup-filter__close-button")[1];
+
+
+partnersFilterButton.addEventListener("click", function () {
+    partnersFilterPopup.style.display = "block";
+});
+
+closeButtonPartners.addEventListener("click", function () {
+    partnersFilterPopup.style.display = "none";
+});
+
+/* Фильтр по городам */
+
+const cityFilterPopup = document.getElementById("popup-city-filter");
+const cityFilterButton = document.getElementById("city-filter");
+const closeButtonCity = document.getElementsByClassName("popup-filter__close-button")[2];
+const citiesList = document.getElementById('cities-list')
+
+
+const searchInput = document.getElementById('city-input');
+
+cityFilterButton.addEventListener("click", function () {
+    cityFilterPopup.style.display = "block";
+});
+
+closeButtonCity.addEventListener("click", function () {
+    cityFilterPopup.style.display = "none";
+    searchInput.value = ''
+});
+
+
+
+
 
 
 

@@ -19,11 +19,11 @@
             <button class="popup-menu__close" id="popup-menu-close"></button>
         </div>
         <nav class="popup-menu__main">
-            <a href="'#">Каталог</a>
-            <p>Телефон</p>
-            <p>Добавить партнера</p>
-            <p>Пользовательское соглашение</p>
-            <p>Контакты компании</p>
+            <a class="popup-menu__item" href="#">Каталог</a>
+            <a class="popup-menu__item" href="#">Телефон</a>
+            <a class="popup-menu__item" href="#">Добавить партнера</a>
+            <a class="popup-menu__item" href="#">Пользовательское соглашение</a>
+            <a class="popup-menu__item" href="#">Контакты компании</a>
         </nav>
     </div>
 
@@ -39,7 +39,7 @@
         <h1 class="title">Официальные партнёры завода</h1>
         <div class="filter-buttons">
             <button class="filter-buttons__button" id="partner-filter">Все партнеры</button>
-            <button class="filter-buttons__button" id="item-filter">Тип двигателя</button>
+            <button class="filter-buttons__button" id="engine-filter">Тип двигателя</button>
             <button class="filter-buttons__button" id="city-filter">Город</button>
         </div>
 
@@ -53,43 +53,57 @@
         Footer
     </footer>
 
+    <div class="popup-filter" id="popup-engine-filter">
+        <div class="popup-filter__content">
+            <div class="popup-filter__close-slide"></div>
+            <span class="popup-filter__close-button">&times;</span>
+            <h2 class="popup-filter__title">Тип двигателя</h2>
+            <form class="popup-filter__form">
+                <div class="popup-filter__item">
+                    <input type="checkbox" id="KAMAZ_R6" name="KAMAZ_R6" value="KAMAZ_R6 KAMAZ_740" />
+                    <label for="KAMAZ_R6">KAMAZ</label>
+                </div>
+                <div class="popup-filter__item">
+                    <input type="checkbox" id="Cummins_6.7" name="Cummins_6.7" value="Cummins_6.7" />
+                    <label for="Cummins_6.7">Cummins</label>
+                </div>
+                <div class="popup-filter__item">
+                    <input type="checkbox" id="YAMZ" name="YAMZ" value="YAMZ" />
+                    <label for="YAMZ">YAMZ</label>
+                </div>
+                <div class="popup-filter__item">
+                    <input type="checkbox" id="Mersedes_457_LA" name="Mersedes_457_LA" value="Mersedes_457_LA" />
+                    <label for="Mersedes_457_LA">Mersedes</label>
+                </div>
+                <button class="popup-filter__submit-button" id="engine-filter-submit-button" type="submit">Показать
+                    точки продаж</button>
+            </form>
+            <p>* фильтрация по полю КАМАЗ временно не работает (переехала на новое место не корректно), поправлю вместе
+                с другими изменениями</p>
+        </div>
+    </div>
 
+    <div class="popup-filter" id="popup-partners-filter">
+        <div class="popup-filter__content">
+            <div class="popup-filter__close-slide"></div>
+            <span class="popup-filter__close-button">&times;</span>
+            <h2 class="popup-filter__title">Партнеры</h2>
+            <button>Все</button>
+            <button>Магазины</button>
+            <button>Сервисы</button>
+            <p>* Функционал не реализован</p>
+        </div>
+    </div>
 
-    <form class="filter">
-        <div class="filter__item">
-            <h2 class="filter__title">Kamaz</h2>
-            <div>
-                <input type="checkbox" id="KAMAZ_R6" name="KAMAZ_R6" value="KAMAZ_R6" />
-                <label for="KAMAZ_R6">KAMAZ_R6</label>
-            </div>
-            <div>
-                <input type="checkbox" id="KAMAZ_740" name="KAMAZ_740" value="KAMAZ_740" />
-                <label for="KAMAZ_740">KAMAZ_740</label>
-            </div>
+    <div class="popup-filter" id="popup-city-filter">
+        <div class="popup-filter__content">
+            <div class="popup-filter__close-slide"></div>
+            <span class="popup-filter__close-button">&times;</span>
+            <h2 class="popup-filter__title">Выберите город</h2>
+            <input class="popup-filter__input" id="city-input" placeholder="поиск по городам">
+            <ul class="popup-filter__cities-list" id="cities-list"></ul>
         </div>
-        <div class="filter__item">
-            <h2 class="filter__title">Cummins</h2>
-            <div>
-                <input type="checkbox" id="Cummins_6.7" name="Cummins_6.7" value="Cummins_6.7" />
-                <label for="Cummins_6.7">Cummins_6.7</label>
-            </div>
-        </div>
-        <div class="filter__item">
-            <h2 class="filter__title">YAMZ</h2>
-            <div>
-                <input type="checkbox" id="YAMZ" name="YAMZ" value="YAMZ" />
-                <label for="YAMZ">YAMZ</label>
-            </div>
-        </div>
-        <div class="filter__item">
-            <h2 class="filter__title">Mersedes</h2>
-            <div>
-                <input type="checkbox" id="Mersedes_457_LA" name="Mersedes_457_LA" value="Mersedes_457_LA" />
-                <label for="Mersedes_457_LA">Mersedes_457_LA</label>
-            </div>
-        </div>
-    </form>
-
+    </div>
 
     <script src="script.js"></script>
 </body>

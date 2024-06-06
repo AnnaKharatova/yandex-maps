@@ -144,4 +144,87 @@ body {
 .popup-menu__main {
     width: 80%;
     margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
+
+.popup-menu__item {
+    text-decoration: none;
+    cursor: pointer;
+    color: black;
+
+}
+
+.popup-filter {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.1);
+    
+  }
+  
+  .popup-filter__content {
+    background-color: #fefefe;
+    padding: 20px;
+    padding-top: 0;
+    width: 100%;
+    border-radius: 10px;
+    position: absolute;
+    bottom: -5px;
+    animation: slideUp 0.5s ease-in-out forwards;
+  }
+  
+  .popup-filter__close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+  }
+  
+.popup-filter__close-slide {
+    width: 28px;
+    height: 3px;
+    background-color: grey;
+    border-radius: 4px;
+    margin:5px auto;
+}
+
+.popup-filter__cities-list {
+    list-style: none;
+}
+
+.popup-filter__city {
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.popup-filter__submit-button {
+    margin: 20px 0;
+    background-color: white;
+    border-radius: 4px;
+    border: 1px solid gray;
+    height: 35px;
+    width: 100%;
+}
+  
+  .popup-filter__close-button:hover,
+  .popup-filter__close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  @keyframes slideUp {
+    0% {
+      bottom: -50%;
+    }
+    100% {
+      bottom: 0;
+    }
+  }
