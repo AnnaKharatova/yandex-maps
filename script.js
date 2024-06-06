@@ -172,12 +172,12 @@ function init() {
                 li.addEventListener('click', function () {
                     cityFilterPopup.style.display = "none";
                     searchInput.value = ''
-                    filterCities() 
+                    filterCities()
                     getCenter(city)
                 })
             });
         }
-        filterCities() 
+        filterCities()
         searchInput.addEventListener('input', filterCities);
 
         map.controls.remove('trafficControl')
@@ -229,6 +229,29 @@ function init() {
                     });
                 });
                 map.geoObjects.add(placemark);
+                    const li = document.createElement('li');
+                    li.textContent = store.address;
+                    li.classList.add('popup-filter__city')
+                    partnersListContainer.appendChild(li);
+                    li.addEventListener('click', function () {
+                        popupPartnersList.style.display = "none";
+                        getCenter(store.address)
+                        placemark.balloon.open()
+                    })
+                
+                
+                const partnersListButton = document.getElementById('partners-list-button')
+                const popupPartnersList = document.getElementById('popup-partners-list')
+                const closeButtonPartnersList = document.getElementsByClassName("popup-filter__close-button")[3];
+
+
+                partnersListButton.addEventListener("click", function () {
+                    popupPartnersList.style.display = "block";
+                });
+
+                closeButtonPartnersList.addEventListener("click", function () {
+                    popupPartnersList.style.display = "none";
+                });
             });
         }
 
@@ -256,6 +279,7 @@ function init() {
 
         function displayStores() {
             map.geoObjects.removeAll();
+            partnersListContainer.innerHTML = '';
             const array = filteredStoreList.length == 0 ? storeList : filteredStoreList
             addPlacemark(array)
         }
@@ -270,12 +294,12 @@ const popupMenu = document.querySelector(".popup-menu")
 
 const burgerButton = document.getElementById('header-nav-burger');
 burgerButton.addEventListener('click', () => {
-    popupMenu.classList.remove("display-none")
+    popupMenu.style.display = "block";
 });
 
 const popupCloseButton = document.getElementById('popup-menu-close');
 popupCloseButton.addEventListener('click', () => {
-    popupMenu.classList.add("display-none")
+    popupMenu.style.display = "none";
 });
 
 /* Фильтр по типу двигателя */
@@ -293,12 +317,12 @@ closeButtonEngine.addEventListener("click", function () {
     filterPopup.style.display = "none";
 });
 
-window.addEventListener("touchstart", function (event) {
+/* window.addEventListener("touchstart", function (event) {
     if (event.touches.clientY < 50) {
         event.preventDefault()
         filterPopup.style.display = "none";
     }
-});
+}); */
 
 submitEngineFilterButton.addEventListener("click", function (event) {
     event.preventDefault()
@@ -340,7 +364,59 @@ closeButtonCity.addEventListener("click", function () {
     searchInput.value = ''
 });
 
-let startY = 0;
+/* Список партнеров */
+
+const partnersListButton = document.getElementById('partners-list-button')
+const popupPartnersList = document.getElementById('popup-partners-list')
+const closeButtonPartnersList = document.getElementsByClassName("popup-filter__close-button")[3];
+const partnersListContainer = document.getElementById('partners-list')
+
+
+
+partnersListButton.addEventListener("click", function () {
+    popupPartnersList.style.display = "block";
+});
+
+closeButtonPartnersList.addEventListener("click", function () {
+    popupPartnersList.style.display = "none";
+});
+
+
+/* Закрытия попапов по клику на overlay */
+
+const popup = document.querySelectorAll('.popup-filter__content');
+const overlay = document.querySelectorAll('.popup-filter');
+const closeButtons = document.querySelectorAll('.popup-filter__close-button');
+
+overlay.forEach(item => {
+    item.addEventListener('click', function () {
+        item.style.display = 'none';
+    });
+})
+
+popup.forEach(item => {
+    item.addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+})
+
+
+
+
+
+/*  map.controls.remove('geolocationControl'); // удаляем геолокацию
+  map.controls.remove('searchControl'); // удаляем поиск
+  map.controls.remove('trafficControl'); // удаляем контроль трафика
+  map.controls.remove('typeSelector'); // удаляем тип
+  map.controls.remove('fullscreenControl'); // удаляем кнопку перехода в полноэкранный режим
+  map.controls.remove('zoomControl'); // удаляем контрол зуммирования
+  map.controls.remove('rulerControl'); // удаляем контрол правил
+  map.behaviors.disable(['scrollZoom']); // отключаем скролл карты (опционально)
+ */
+
+// эксперименты со смахиванием (не удачные):
+
+/*let startY = 0;
 const touchThreshold = 100; // Порог для определения жеста смахивания
 
 document.addEventListener('touchstart', (event) => {
@@ -358,35 +434,9 @@ document.addEventListener('touchmove', (event) => {
   }
 });
 
-const popup = document.querySelectorAll('.popup-filter__content');
-const overlay = document.querySelectorAll('.popup-filter');
+----------------
 
-
-overlay.forEach(item => {
-    item.addEventListener('click', function() {
-        item.style.display = 'none';
-    });
-})
-
-popup.forEach(item => {
-    item.addEventListener('click', function(event) {
-        event.stopPropagation();
-    });
-})
-
-/*  map.controls.remove('geolocationControl'); // удаляем геолокацию
-  map.controls.remove('searchControl'); // удаляем поиск
-  map.controls.remove('trafficControl'); // удаляем контроль трафика
-  map.controls.remove('typeSelector'); // удаляем тип
-  map.controls.remove('fullscreenControl'); // удаляем кнопку перехода в полноэкранный режим
-  map.controls.remove('zoomControl'); // удаляем контрол зуммирования
-  map.controls.remove('rulerControl'); // удаляем контрол правил
-  map.behaviors.disable(['scrollZoom']); // отключаем скролл карты (опционально)
- */
-
-
-
-  /* let isPopupOpen = false;
+  let isPopupOpen = false;
     let startY = 0;
     const popupElement = document.querySelector('.popup-filter__content');
     const overlayElement = document.querySelector('.popup-filter');

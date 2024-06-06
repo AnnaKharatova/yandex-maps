@@ -46,7 +46,7 @@
         <div class="map__container" id="map">
             <script
                 src="https://api-maps.yandex.ru/2.1/?apikey=6fb19312-2127-40e5-8c22-75d1f84f2daa&lang=ru_RU"></script>
-            <button class="map__button"> Список партнеров</button>
+            <button class="map__button" id="partners-list-button"> Список партнеров</button>
         </div>
     </main>
     <footer class="footer">
@@ -102,6 +102,15 @@
             <h2 class="popup-filter__title">Выберите город</h2>
             <input class="popup-filter__input" id="city-input" placeholder="поиск по городам">
             <ul class="popup-filter__cities-list" id="cities-list"></ul>
+        </div>
+    </div>
+
+    <div class="popup-filter" id="popup-partners-list">
+        <div class="popup-filter__content">
+            <div class="popup-filter__close-slide"></div>
+            <span class="popup-filter__close-button">&times;</span>
+            <ul class="popup-filter__cities-list" id="partners-list"></ul>
+            <p>* фильтрация пока только по типу двигателя, кроме Камаза</p>
         </div>
     </div>
 
