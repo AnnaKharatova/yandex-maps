@@ -340,6 +340,24 @@ closeButtonCity.addEventListener("click", function () {
     searchInput.value = ''
 });
 
+let startY = 0;
+const touchThreshold = 100; // Порог для определения жеста смахивания
+
+document.addEventListener('touchstart', (event) => {
+  startY = event.touches[0].clientY;
+});
+
+document.addEventListener('touchmove', (event) => {
+  const currentY = event.touches[0].clientY;
+  const deltaY = currentY - startY;
+
+  // Проверяем, превышает ли смещение по вертикали пороговое значение
+  if (Math.abs(deltaY) > touchThreshold) {
+    // Предотвращаем стандартное поведение браузера
+    event.preventDefault();
+  }
+});
+
 /*  map.controls.remove('geolocationControl'); // удаляем геолокацию
   map.controls.remove('searchControl'); // удаляем поиск
   map.controls.remove('trafficControl'); // удаляем контроль трафика
@@ -352,7 +370,7 @@ closeButtonCity.addEventListener("click", function () {
 
 
 
-  let isPopupOpen = false;
+  /* let isPopupOpen = false;
     let startY = 0;
     const popupElement = document.querySelector('.popup-filter__content');
     const overlayElement = document.querySelector('.popup-filter');
@@ -385,4 +403,4 @@ closeButtonCity.addEventListener("click", function () {
           closePopup();
         }
       }
-    });
+    }); */
