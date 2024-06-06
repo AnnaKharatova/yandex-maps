@@ -162,12 +162,13 @@ body {
 }
 
 .popup-filter {
+    box-sizing: border-box;
     display: none;
     position: fixed;
     z-index: 2;
     left: 0;
     bottom: 0;
-    width: 100%;
+    width: 100vw;
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.1);
@@ -175,10 +176,11 @@ body {
   }
   
   .popup-filter__content {
+    box-sizing: border-box;
     background-color: #fefefe;
     padding: 20px;
     padding-top: 0;
-    width: 100%;
+    width: 100vw;
     border-radius: 10px;
     position: absolute;
     bottom: -5px;
