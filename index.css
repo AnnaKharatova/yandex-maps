@@ -19,6 +19,11 @@ body {
     ;
 }
 
+[class*='gototaxi'] {
+    display: none !important;
+    ;
+}
+
 [class*='gototech'] {
     display: none !important;
 }

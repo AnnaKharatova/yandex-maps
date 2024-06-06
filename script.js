@@ -295,6 +295,7 @@ closeButtonEngine.addEventListener("click", function () {
 
 window.addEventListener("touchstart", function (event) {
     if (event.touches.clientY < 50) {
+        event.preventDefault()
         filterPopup.style.display = "none";
     }
 });
