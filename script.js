@@ -69,14 +69,45 @@ function init() {
                 });
         }
 
-        function createPartnersList(address) {
+        function createPartnersList(item) {
             const li = document.createElement('li');
-            li.textContent = address;
-            li.classList.add('popup-filter__city')
+            li.classList.add('popup-filter__store')
+
+            const div = document.createElement('div')
+            div.classList.add('popup-filter__store-item')
+
+            const title = document.createElement('h3')
+            title.classList.add('popup-filter__store-info')
+            title.textContent = item.name
+            div.appendChild(title)
+
+            const address = document.createElement('p')
+            address.classList.add('popup-filter__store-info')
+            address.textContent = item.address
+            div.appendChild(address)
+
+            const phone = document.createElement('p')
+            phone.classList.add('popup-filter__store-info')
+            phone.textContent = item.phone
+            div.appendChild(phone)
+
+            const website = document.createElement('p')
+            website.classList.add('popup-filter__store-info')
+            website.textContent = item.website
+            div.appendChild(website)
+
+            li.appendChild(div)
+
+            const imgArrow = document.createElement('img')
+            imgArrow.src = './images/icon-goto-arrow.svg'
+            imgArrow.alt = 'go to icon'
+            imgArrow.classList.add('popup-filter__store-icon')
+            li.appendChild(imgArrow)
+
             partnersListContainer.appendChild(li);
             li.addEventListener('click', function () {
                 popupPartnersList.style.display = "none";
-                getCenter(address)
+                getCenter(item.address)
             })
         }
 
@@ -98,9 +129,10 @@ function init() {
                     const filteredByCities = findCity(city)
                     console.log(filteredByCities)
                     partnersListContainer.innerHTML = ''
-                    filteredByCities.forEach(item => {
+                    const list = filteredByCities.reverse()
+                    list.forEach(item => {
                         console.log(item)
-                        createPartnersList(item.address)
+                        createPartnersList(item)
                     })
                 })
             });
@@ -109,7 +141,8 @@ function init() {
         searchInput.addEventListener('input', filterCities);
 
         function addPlacemark(storeList) {
-            storeList.forEach(store => {
+            const reversedStoreList = storeList.reverse()
+            reversedStoreList.forEach(store => {
                 const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
                     balloonContentHeader: store.name,
                     balloonContentBody: `<p>Адрес: ${store.address}</p> <p>Тел:${store.phone}</p> <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p><button class="route-button">Построить маршрут</button>`,
@@ -139,7 +172,7 @@ function init() {
                     });
                 });
                 map.geoObjects.add(placemark);
-                createPartnersList(store.address)
+                createPartnersList(store)
 
                 partnersListButton.addEventListener("click", function () {
                     popupPartnersList.style.display = "block";
