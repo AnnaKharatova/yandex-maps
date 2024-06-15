@@ -37,16 +37,14 @@ function init() {
     map.controls.remove("taxi")
 
     const control = map.controls.get('routeButtonControl')
-    control.routePanel.state.set({
-        type: 'auto',
-        fromEnabled: true,
-        toEnabled: true,
-    })
+
     control.routePanel.options.set({
         types: {
             auto: true,
             pedestrian: true,
-        }
+        },
+        fromEnabled: true,
+        toEnabled: true,
     })
 
     function findCity(city) {
@@ -155,20 +153,28 @@ function init() {
             placemark.events.add('balloonopen', () => {
                 const button = document.querySelector('.route-button');
                 button.addEventListener('click', () => {
-                    storeLocation = store.address;
-
                     let location = ymaps.geolocation.get();
                     location.then(function (res) {
                         let locationText = res.geoObjects.get(0).properties.get('text');
-
                         control.routePanel.state.set({
+                            state: "expanded",
                             from: locationText,
-                            to: `${store.latitude},${store.longitude}`
+                            to: `${store.latitude},${store.longitude}`,
                         });
+                        var multiRoute = new ymaps.multiRouter.MultiRoute({
+                            referencePoints: [
+                              [locationText],
+                              [store.latitude, store.longitude]
+                            ],
+                            params: {
+                              routingMode: 'auto'
+                            }
+                          });
+                          map.geoObjects.add(multiRoute);
                     });
-                    console.log('click');
                 });
             });
+
             map.geoObjects.add(placemark);
             createPartnersList(store)
 
