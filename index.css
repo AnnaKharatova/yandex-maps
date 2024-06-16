@@ -75,6 +75,8 @@ body {
     cursor: pointer;
 }
 
+/* Content */
+
 .bunner {
     width: 95%;
     height: 80px;
@@ -86,8 +88,6 @@ body {
     font-size: 20px;
     margin-left: 10px;
 }
-
-/* Content */
 
 .filter-buttons {
     width: 95%;
@@ -114,6 +114,24 @@ body {
 .filter-buttons__button:hover {
     cursor: pointer;
     background-color: #aaa;
+}
+
+.filters-checked {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0 10px 10px;
+}
+
+.filters-checked__partners {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 4px 0 0;
+    padding: 0;
+    flex-direction: row;
+    gap: 4px;
 }
 
 .map__container {
@@ -205,8 +223,8 @@ body {
     bottom: -5px;
     animation: slideUp 0.5s ease-in-out forwards;
     max-height: 80%;
+    min-height: 30%;
     overflow: auto;
-
 }
 
 .popup-filter__close-button {
@@ -237,20 +255,38 @@ body {
     flex-wrap: wrap;
     flex-direction: row;
     gap: 10px;
-    row-gap: 30px;
+    row-gap: 10px;
+}
+
+.popup-filter__engine-checkbox {
+    display: none;
 }
 
 .popup-filter__partners-checkbox {
     display: none;
 }
+
 .popup-filter__label-span {
-    background-color: rgb(130, 133, 127);
-    padding: 10px 15px;
-    border-radius: 20px;
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    border-radius: 16px;
+    background-color: #C4C4C4;
+    margin: 0;
+    padding: 4px 12px;
+    max-height: 30px;
     box-sizing: border-box;
 }
-.popup-filter__partners-checkbox:checked + .popup-filter__label-span {
-    background-color: rgb(59, 59, 59);
+
+.popup-filter__partners-checkbox:checked+.popup-filter__label-span {
+    background-color: #4A4A4A;
+    color: white;
+}
+
+.popup-filter__engine-checkbox:checked+.popup-filter__label-span {
+    background-color: #4A4A4A;
     color: white;
 }
 
@@ -346,7 +382,6 @@ body {
     justify-content: space-between;
     border-bottom: 1px solid gray;
     width: 100%;
-
 }
 
 .popup-filter__store-info {

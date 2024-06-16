@@ -6,6 +6,10 @@ import { citiesArray } from './constants.js'
 /* MAP */
 
 const searchInput = document.getElementById('city-input');
+const partnersFilterPopup = document.getElementById("popup-partners-filter");
+const submitFilterButton = document.getElementById("filter-submit-button");
+const partnersFilterButton = document.getElementById("partner-filter");
+const toggleButton = document.getElementById('toggleButton')
 
 function init() {
     const partnersListButton = document.getElementById('partners-list-button')
@@ -36,13 +40,11 @@ function init() {
         toEnabled: true,
     })
 
-
     fetch('http://158.160.154.213/api/partners/')
         .then(res => res.json())
         .then(resData => {
 
             const fetchedData = JSON.parse(JSON.stringify(resData))
-
             console.log(fetchedData)
 
             function findCity(city) {
@@ -121,30 +123,41 @@ function init() {
                         filterCities()
                         getCenter(city)
                         const filteredByCities = findCity(city)
-                        console.log(filteredByCities)
                         partnersListContainer.innerHTML = ''
                         const list = filteredByCities.reverse()
                         list.forEach(item => {
-                            console.log(item)
                             createPartnersList(item)
                         })
+
+                        const p = document.querySelector('.filters-checked__city');
+                        p.classList.add('popup-filter__label-span');
+                        p.textContent = city
+
                     })
                 });
             }
             filterCities()
             searchInput.addEventListener('input', filterCities);
 
-            function addPlacemark(fetchedData) {
-                const reversedStoreList = fetchedData.reverse()
+            function addPlacemark(data) {
+                const reversedStoreList = data.reverse()
                 reversedStoreList.forEach(store => {
                     const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
                         balloonContentHeader: store.name,
-                        balloonContentBody: `<p>Адрес: ${store.address}</p> <p>Тел:${store.phone}</p> <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p><button class="route-button">Построить маршрут</button>`,
+                        balloonContentBody: `
+                        <p>Адрес: ${store.address}</p> 
+                        <p>Тел:${store.phone}</p> 
+                        <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p>
+                        <p>Часы работы:</p>
+                        <p>Будни: ${store.time_open_weekdays} - ${store.time_close_weekdays} </p>
+                        <p>Суббота: ${store.time_open_saturday} - ${store.time_close_saturday} </p>
+                        <p>Воскресенье: ${store.time_open_sunday} - ${store.time_close_sunday} </p>
+                        <button class="route-button">Построить маршрут</button>`,
                         balloonContentFooter: `Наш сайт: <a href=${store.website}>${store.website}</a>`
                     }, {
                         iconLayout: 'default#image',
-                        iconImageHref: 'https://cdn-icons-png.flaticon.com/512/15219/15219090.png',
-                        iconImageSize: [40, 40],
+                        iconImageHref: 'https://cdn-icons-png.flaticon.com/512/3179/3179068.png',
+                        iconImageSize: [25, 25],
                         iconImageOffset: [0, 0]
                     });
 
@@ -188,24 +201,6 @@ function init() {
 
             addPlacemark(fetchedData)
 
-            function filterPartnersList() {
-                const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked')).map(checkbox => checkbox.value);
-                filteredPartnersList = fetchedData.filter(store => {
-                    const tag = store.tags[0].name
-                    console.log(tag)        
-                    return selectedPartners.some(selectedPart => {
-                        return tag.some(part => part.name === selectedPart);
-                    });
-                });
-            }
-            const partnersCheckboxes = document.querySelectorAll('.popup-filter__partners-checkbox');
-            partnersCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', () => {
-                    filterPartnersList()
-                    displayStores(filteredPartnersList)
-                });
-            });
-
             function filterStoreList() {
                 const selectedParts = Array.from(document.querySelectorAll('.popup-filter__engine-checkbox:checked')).map(checkbox => checkbox.value);
                 filteredStoreList = fetchedData.filter(store => {
@@ -214,32 +209,48 @@ function init() {
                     });
                 });
             }
-            const engineCheckboxes = document.querySelectorAll('.popup-filter__engine-checkbox');
-            engineCheckboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', () => {
-                    filterStoreList()
-                    displayStores(filteredStoreList)
+            function filterPartnersList() {
+                const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked')).map(checkbox => checkbox.value);
+                const array = filteredStoreList.length == 0 ? fetchedData : filteredStoreList
+                filteredPartnersList = array.filter(store => {
+                    return store.tags.some(tag => selectedPartners.includes(tag.name));
                 });
+            }
+
+            submitFilterButton.addEventListener("click", function (event) {
+                event.preventDefault()
+                const ul = document.querySelector('.filters-checked__partners');
+                ul.innerHTML = "";
+                const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+                checkedCheckboxes.forEach(checkbox => {
+                    const li = document.createElement('li');
+                    li.classList.add('popup-filter__label-span');
+                    li.textContent = checkbox.value
+                    ul.appendChild(li)
+                })
+                filterPartnersList()
+                filterStoreList()
+                const list = filteredPartnersList.length == 0 ? filteredStoreList : filteredPartnersList
+                const array = checkedCheckboxes.length == 0 ? fetchedData : list
+                const openStores = getOpenStores(array);
+                displayStores(openStores)
+                createPartnersList(openStores) 
+                partnersFilterPopup.style.display = "none";
             });
-
-
-
-
-
 
             function displayStores(array) {
                 map.geoObjects.removeAll();
                 partnersListContainer.innerHTML = '';
-                const newArray = array.length == 0 ? fetchedData : array
-                addPlacemark(newArray)
+                addPlacemark(array)
             }
+
+
         })
+
         .catch(e => {
             console.error(e)
         })
 }
-
-
 
 ymaps.ready(init);
 
@@ -259,29 +270,14 @@ popupCloseButton.addEventListener('click', () => {
 
 /* Фильтр */
 
-const partnersFilterPopup = document.getElementById("popup-partners-filter");
-const submitFilterButton = document.getElementById("filter-submit-button");
-const partnersFilterButton = document.getElementById("partner-filter");
-const toggleButton = document.getElementById('toggleButton')
+
 
 
 partnersFilterButton.addEventListener("click", function () {
     partnersFilterPopup.style.display = "block";
 });
 
-submitFilterButton.addEventListener("click", function (event) {
-    event.preventDefault()
-    filterPopup.style.display = "none";
-});
 
-
-toggleButton.addEventListener('change', function () {
-    if (this.checked) {
-        console.log('Бегунок активен');
-    } else {
-        console.log('Бегунок не активен');
-    }
-});
 
 /* Фильтр по городам */
 
@@ -309,7 +305,6 @@ partnersListButton.addEventListener("click", function () {
     popupPartnersList.style.display = "block";
 });
 
-
 /* Закрытие попапов */
 
 const popup = document.querySelectorAll('.popup-filter__content');
@@ -335,17 +330,43 @@ popup.forEach(item => {
     });
 })
 
+/* часы работы(открыто ли сейчас) */
+
+function getOpenStores(stores) {
+    const currentDate = new Date();
+    const currentDay = currentDate.getDay(); // 0 - воскресенье, 6 - суббота
+    const currentHour = currentDate.getHours();
+    const currentMinute = currentDate.getMinutes();
+
+    if (toggleButton.checked) {
+        return stores.filter(store => {
+
+            let openTime, closeTime;
+
+            if (currentDay === 0) { // Воскресенье
+                openTime = store.time_open_sunday;
+                closeTime = store.time_close_sunday;
+            } else if (currentDay === 6) { // Суббота
+                openTime = store.time_open_saturday;
+                closeTime = store.time_close_saturday;
+            } else { // Будние дни
+                openTime = store.time_open_weekdays;
+                closeTime = store.time_close_weekdays;
+            }
+
+            if (openTime) {
+                const [openHour, openMinute] = openTime.split(':').map(Number);
+                const [closeHour, closeMinute] = closeTime.split(':').map(Number);
+                return (currentHour > openHour || (currentHour === openHour && currentMinute >= openMinute))
+                    && (currentHour < closeHour || (currentHour === closeHour && currentMinute < closeMinute));
+            }
+        });
+    } else {
+        return stores;
+    }
+
+}
 
 
-
-/* citiesArray.map(city => {
-    const cityName = document.createElement('li');
-    cityName.textContent = city;
-    citiesList.appendChild(cityName);
-    cityName.addEventListener('click', function () {
-        cityFilterPopup.style.display = "none";
-        getCenter(city)
-    })
-}) */
 
 
