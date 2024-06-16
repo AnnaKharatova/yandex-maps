@@ -38,8 +38,7 @@
         <div class="bunner">Баннер</div>
         <h1 class="title">Официальные партнёры завода</h1>
         <div class="filter-buttons">
-            <button class="filter-buttons__button" id="partner-filter">Все партнеры</button>
-            <button class="filter-buttons__button" id="engine-filter">Тип двигателя</button>
+            <button class="filter-buttons__button" id="partner-filter">Фильтры</button>
             <button class="filter-buttons__button" id="city-filter">Город</button>
         </div>
 
@@ -53,63 +52,59 @@
         Footer
     </footer>
 
-    <div class="popup-filter" id="popup-engine-filter">
-        <div class="popup-filter__content">
-            <span class="popup-filter__close-button">&times;</span>
-            <h2 class="popup-filter__title">Тип двигателя</h2>
-            <form class="popup-filter__form">
-                <div class="popup-filter__item">
-                    <input class="popup-filter__engine-checkbox" type="checkbox" id="KAMAZ_R6" name="KAMAZ_R6"
-                        value="KAMAZ_R6 KAMAZ_740" />
-                    <label for="KAMAZ_R6">KAMAZ</label>
-                </div>
-                <div class="popup-filter__item">
-                    <input class="popup-filter__engine-checkbox" type="checkbox" id="Cummins_6.7" name="Cummins_6.7"
-                        value="Cummins_6.7" />
-                    <label for="Cummins_6.7">Cummins</label>
-                </div>
-                <div class="popup-filter__item">
-                    <input class="popup-filter__engine-checkbox" type="checkbox" id="YAMZ" name="YAMZ" value="YAMZ" />
-                    <label for="YAMZ">YAMZ</label>
-                </div>
-                <div class="popup-filter__item">
-                    <input class="popup-filter__engine-checkbox" type="checkbox" id="Mersedes_457_LA"
-                        name="Mersedes_457_LA" value="Mersedes_457_LA" />
-                    <label for="Mersedes_457_LA">Mersedes</label>
-                </div>
-                <button class="popup-filter__submit-button" id="engine-filter-submit-button" type="submit">Показать
-                    точки продаж</button>
-            </form>
-            <p>* фильтрация по полю КАМАЗ временно не работает (переехала на новое место не корректно), поправлю вместе
-                с другими изменениями</p>
-        </div>
-    </div>
-
     <div class="popup-filter" id="popup-partners-filter">
         <div class="popup-filter__content">
             <span class="popup-filter__close-button">&times;</span>
-            <h2 class="popup-filter__title">Партнеры</h2>
+            <h2 class="popup-filter__title">Фильтры</h2>
             <form class="popup-filter__form">
-                <div class="popup-filter__item">
-                    <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-shop" name="partner-shop"
-                        value="*" />
-                    <label for="partner-shop">Розничный магазин</label>
-                </div>
-                <div class="popup-filter__item">
-                    <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-service"
-                        name="partner-service" value="*" />
-                    <label for="partner-service">Автосервис</label>
-                </div>
-                <div class="popup-filter__item">
-                    <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-opt" name="partner-opt"
-                        value="*" />
-                    <label for="partner-opt">Оптовый склад</label>
-                </div>
-                <div class="popup-filter__item">
-                    <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-dealer"
-                        name="partner-dealer" value="*" />
-                    <label for="partner-dealer">Дилер</label>
-                </div>
+                <h3>Партнеры</h3>
+                <section class="popup-filter__section">
+
+                    <label class="popup-filter__label" for="partner-shop">
+                        <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-shop"
+                            name="partner-shop" value="Магазин" />
+                        <span class="popup-filter__label-span">Магазин</span>
+                    </label>
+                    <label class="popup-filter__label" for="partner-service">
+                        <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-service"
+                            name="partner-service" value="Автосервис" />
+                        <span class="popup-filter__label-span">Автосервис</span>
+                    </label>
+                    <label class="popup-filter__label" for="partner-opt">
+                        <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-opt"
+                            name="partner-opt" value="Оптовый склад" />
+                        <span class="popup-filter__label-span">Оптовый склад</span>
+                    </label>
+                    <label class="popup-filter__label" for="partner-dealer">
+                        <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-dealer"
+                            name="partner-dealer" value="Дилер" />
+                        <span class="popup-filter__label-span">Дилер</span>
+                    </label>
+                </section>
+
+                <h3>Типы двигателя</h3>
+                <section class="popup-filter__section-engins">
+                    <div class="popup-filter__item">
+                        <input class="popup-filter__engine-checkbox" type="checkbox" id="KAMAZ_R6" name="KAMAZ_R6"
+                            value="KAMAZ_R6 KAMAZ_740" />
+                        <label class="popup-filter__label" for="KAMAZ_R6">KAMAZ</label>
+                    </div>
+                    <div class="popup-filter__item">
+                        <input class="popup-filter__engine-checkbox" type="checkbox" id="Cummins_6.7" name="Cummins_6.7"
+                            value="Cummins_6.7" />
+                        <label class="popup-filter__label" for="Cummins_6.7">Cummins</label>
+                    </div>
+                    <div class="popup-filter__item">
+                        <input class="popup-filter__engine-checkbox" type="checkbox" id="YAMZ" name="YAMZ"
+                            value="YAMZ" />
+                        <label class="popup-filter__label" for="YAMZ">YAMZ</label>
+                    </div>
+                    <div class="popup-filter__item">
+                        <input class="popup-filter__engine-checkbox" type="checkbox" id="Mersedes_457_LA"
+                            name="Mersedes_457_LA" value="Mersedes_457_LA" />
+                        <label class="popup-filter__label" for="Mersedes_457_LA">Mersedes</label>
+                    </div>
+                </section>
                 <div class="popup-filter__item">
                     <label class="popup-filter__toggle">
                         <input class="popup-filter__input-slider" type="checkbox" id="toggleButton">
@@ -117,10 +112,11 @@
                     </label>
                     <span class="popup-filter__slider-title">Открыто сейчас</span>
                 </div>
-                <button class="popup-filter__submit-button" id="partners-filter-submit-button" type="submit">Показать
-                    точки продаж</button>
+
+                <button class="popup-filter__submit-button" id="filter-submit-button" type="submit">Применить</button>
             </form>
-            <p>* Функционал не реализован</p>
+            <p>* фильтрация по полю КАМАЗ временно не работает (переехала на новое место не корректно), поправлю вместе
+                с другими изменениями</p>
         </div>
     </div>
 
