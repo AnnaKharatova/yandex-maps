@@ -1,8 +1,6 @@
 
 import { citiesArray } from './constants.js'
 
-
-
 /* MAP */
 
 const searchInput = document.getElementById('city-input');
@@ -12,9 +10,7 @@ const partnersFilterButton = document.getElementById("partner-filter");
 const toggleButton = document.getElementById('toggleButton')
 
 function init() {
-    const partnersListButton = document.getElementById('partners-list-button')
     const popupPartnersList = document.getElementById('popup-partners-list')
-    const closeButtonPartnersList = document.getElementsByClassName("popup-filter__close-button")[2];
 
     let filteredStoreList = [];
     let filteredPartnersList = [];
@@ -132,7 +128,6 @@ function init() {
                         const p = document.querySelector('.filters-checked__city');
                         p.classList.add('popup-filter__label-span');
                         p.textContent = city
-
                     })
                 });
             }
@@ -144,8 +139,8 @@ function init() {
                 reversedStoreList.forEach(store => {
                     const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
                         balloonContentHeader: store.name,
-                        balloonContentBody: `
-                        <p>Адрес: ${store.address}</p> 
+                        balloonContentBody:
+                        `<p>Адрес: ${store.address}</p> 
                         <p>Тел:${store.phone}</p> 
                         <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p>
                         <p>Часы работы:</p>
@@ -172,7 +167,7 @@ function init() {
                                     from: locationText,
                                     to: `${store.latitude},${store.longitude}`,
                                 });
-                                var multiRoute = new ymaps.multiRouter.MultiRoute({
+                                const multiRoute = new ymaps.multiRouter.MultiRoute({
                                     referencePoints: [
                                         [locationText],
                                         [store.latitude, store.longitude]
@@ -188,14 +183,6 @@ function init() {
 
                     map.geoObjects.add(placemark);
                     createPartnersList(store)
-
-                    partnersListButton.addEventListener("click", function () {
-                        popupPartnersList.style.display = "block";
-                    });
-
-                    closeButtonPartnersList.addEventListener("click", function () {
-                        popupPartnersList.style.display = "none";
-                    });
                 });
             }
 
@@ -243,8 +230,6 @@ function init() {
                 partnersListContainer.innerHTML = '';
                 addPlacemark(array)
             }
-
-
         })
 
         .catch(e => {
@@ -270,14 +255,9 @@ popupCloseButton.addEventListener('click', () => {
 
 /* Фильтр */
 
-
-
-
 partnersFilterButton.addEventListener("click", function () {
     partnersFilterPopup.style.display = "block";
 });
-
-
 
 /* Фильтр по городам */
 
