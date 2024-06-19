@@ -140,7 +140,8 @@ function init() {
                     const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
                         balloonContentHeader: store.name,
                         balloonContentBody:
-                        `<p>Адрес: ${store.address}</p> 
+                        `<p>${store.tags.map(tag => tag.name)}</p>
+                        <p>Адрес: ${store.address}</p> 
                         <p>Тел:${store.phone}</p> 
                         <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p>
                         <p>Часы работы:</p>
@@ -196,9 +197,11 @@ function init() {
                     });
                 });
             }
+
+            const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked'))
             function filterPartnersList() {
-                const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked')).map(checkbox => checkbox.value);
-                const array = filteredStoreList.length == 0 ? fetchedData : filteredStoreList
+                selectedPartners.map(checkbox => checkbox.value);
+                const array = (filteredStoreList.length == 0) ? fetchedData : filteredStoreList
                 filteredPartnersList = array.filter(store => {
                     return store.tags.some(tag => selectedPartners.includes(tag.name));
                 });
@@ -218,7 +221,9 @@ function init() {
                 filterPartnersList()
                 filterStoreList()
                 const list = filteredPartnersList.length == 0 ? filteredStoreList : filteredPartnersList
+                // const allSorderdList = list.length == 0 ? fetchedData : list
                 const array = checkedCheckboxes.length == 0 ? fetchedData : list
+                console.log(array)
                 const openStores = getOpenStores(array);
                 displayStores(openStores)
                 createPartnersList(openStores) 
