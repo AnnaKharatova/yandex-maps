@@ -1,4 +1,3 @@
-
 import { citiesArray } from './constants.js'
 
 /* MAP */
@@ -114,6 +113,8 @@ function init() {
                     li.classList.add('popup-filter__city')
                     citiesList.appendChild(li);
                     li.addEventListener('click', function () {
+                        const bigFilterCityPopup = document.getElementById('city-filter-big')
+                        bigFilterCityPopup.textContent = city
                         cityFilterPopup.style.display = "none";
                         searchInput.value = ''
                         filterCities()
@@ -124,7 +125,7 @@ function init() {
                         list.forEach(item => {
                             createPartnersList(item)
                         })
-
+                        
                         const p = document.querySelector('.filters-checked__city');
                         p.classList.add('popup-filter__label-span');
                         p.textContent = city
@@ -140,7 +141,7 @@ function init() {
                     const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
                         balloonContentHeader: store.name,
                         balloonContentBody:
-                        `<p>${store.tags.map(tag => tag.name)}</p>
+                            `<p>${store.tags.map(tag => tag.name)}</p>
                         <p>Адрес: ${store.address}</p> 
                         <p>Тел:${store.phone}</p> 
                         <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p>
@@ -188,9 +189,9 @@ function init() {
             }
 
             addPlacemark(fetchedData)
-
             function filterStoreList() {
-                const selectedParts = Array.from(document.querySelectorAll('.popup-filter__engine-checkbox:checked')).map(checkbox => checkbox.value);
+                const selectedParts = Array.from(document.querySelectorAll('.popup-filter__engine-checkbox:checked'))
+                selectedParts.map(checkbox => checkbox.value);
                 filteredStoreList = fetchedData.filter(store => {
                     return selectedParts.some(selectedPart => {
                         return store.parts_available.some(part => part.name === selectedPart);
@@ -198,10 +199,10 @@ function init() {
                 });
             }
 
-            const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked'))
             function filterPartnersList() {
+                const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked'))
                 selectedPartners.map(checkbox => checkbox.value);
-                const array = (filteredStoreList.length == 0) ? fetchedData : filteredStoreList
+                const array = filteredStoreList.length == 0 ? fetchedData : filteredStoreList
                 filteredPartnersList = array.filter(store => {
                     return store.tags.some(tag => selectedPartners.includes(tag.name));
                 });
@@ -221,12 +222,11 @@ function init() {
                 filterPartnersList()
                 filterStoreList()
                 const list = filteredPartnersList.length == 0 ? filteredStoreList : filteredPartnersList
-                // const allSorderdList = list.length == 0 ? fetchedData : list
                 const array = checkedCheckboxes.length == 0 ? fetchedData : list
                 console.log(array)
                 const openStores = getOpenStores(array);
                 displayStores(openStores)
-                createPartnersList(openStores) 
+                createPartnersList(openStores)
                 partnersFilterPopup.style.display = "none";
             });
 
@@ -264,6 +264,12 @@ partnersFilterButton.addEventListener("click", function () {
     partnersFilterPopup.style.display = "block";
 });
 
+const bigFilterPopup = document.getElementById('partner-filter-big')
+
+bigFilterPopup.addEventListener("click", function () {
+    partnersFilterPopup.style.display = "block";
+});
+
 /* Фильтр по городам */
 
 const cityFilterPopup = document.getElementById("popup-city-filter");
@@ -278,6 +284,12 @@ cityFilterButton.addEventListener("click", function () {
 closeButtonCity.addEventListener("click", function () {
     cityFilterPopup.style.display = "none";
     searchInput.value = ''
+});
+
+const bigFilterCityPopup = document.getElementById('city-filter-big')
+
+bigFilterCityPopup.addEventListener("click", function () {
+    cityFilterPopup.style.display = "block";
 });
 
 /* Список партнеров */

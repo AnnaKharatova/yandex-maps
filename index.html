@@ -33,6 +33,12 @@
             <p class="header__title">Имя сайта</p>
         </div>
         <button class="header__nav-burger" id="header-nav-burger"></button>
+        <nav class="header__nav">
+            <a class="header__item" href="#">Каталог &#8744;</a>
+            <a class="header__item" href="#">Добавить партнера</a>
+            <a class="header__item" href="#">Контакты</a>
+            <a class="header__item" href="#">+7 999 999 99 99</a>
+        </nav>
     </header>
     <main>
         <div class="bunner">Баннер</div>
@@ -45,10 +51,21 @@
             <ul class="filters-checked__partners"></ul>
             <p class="filters-checked__city"></p>
         </div>
-        <div class="map__container" id="map">
-            <script
-                src="https://api-maps.yandex.ru/2.1/?apikey=6fb19312-2127-40e5-8c22-75d1f84f2daa&lang=ru_RU"></script>
-            <button class="map__button" id="partners-list-button">Список партнеров</button>
+        <div class="map">
+            <div class="partners">
+                <div class="partners__filter-buttons">
+                    <button class="filter-buttons__button" id="city-filter-big">Город</button>
+                    <button class="filter-buttons__button" id="partner-filter-big">Фильтры</button>
+                </div>
+                <div class="partners__container">
+                    <ul class="popup-filter__partners-list" id="partners-list"></ul>
+                </div>
+            </div>
+            <div class="map__container" id="map">
+                <script class="map__script"
+                    src="https://api-maps.yandex.ru/2.1/?apikey=6fb19312-2127-40e5-8c22-75d1f84f2daa&lang=ru_RU"></script>
+                <button class="map__button" id="partners-list-button">Список партнеров</button>
+            </div>
         </div>
     </main>
     <footer class="footer">
