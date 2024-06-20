@@ -225,9 +225,7 @@ main {
         top: 265px;
         left: 50%;
     }
-    .filters-checked__city {
-        display: none;
-    }
+
 }
 
 .partners__filter-buttons {

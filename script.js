@@ -14,6 +14,7 @@ function init() {
     let filteredStoreList = [];
     let filteredPartnersList = [];
 
+
     const map = new ymaps.Map('map', {
         center: [55.753962, 37.620393],
         zoom: 8,
@@ -101,32 +102,32 @@ function init() {
                 if (window.innerWidth >= 750) {
                     const li = document.createElement('li');
                     li.classList.add('popup-filter__store')
-    
+
                     const div = document.createElement('div')
                     div.classList.add('popup-filter__store-item')
-    
+
                     const title = document.createElement('h3')
                     title.classList.add('popup-filter__store-info')
                     title.textContent = item.name
                     div.appendChild(title)
-    
+
                     const address = document.createElement('p')
                     address.classList.add('popup-filter__store-info')
                     address.textContent = item.address
                     div.appendChild(address)
-    
+
                     const phone = document.createElement('p')
                     phone.classList.add('popup-filter__store-info')
                     phone.textContent = item.phone
                     div.appendChild(phone)
-    
+
                     const website = document.createElement('p')
                     website.classList.add('popup-filter__store-info')
                     website.textContent = item.website
                     div.appendChild(website)
-    
+
                     li.appendChild(div)
-    
+
                     const imgArrow = document.createElement('img')
                     imgArrow.src = './images/icon-goto-arrow.svg'
                     imgArrow.alt = 'go to icon'
@@ -138,48 +139,48 @@ function init() {
                     })
                     const partnersListContainerBig = document.getElementById('partners-list-big')
                     partnersListContainerBig.appendChild(li);
-                  } else {
+                } else {
                     const li = document.createElement('li');
-                li.classList.add('popup-filter__store')
+                    li.classList.add('popup-filter__store')
 
-                const div = document.createElement('div')
-                div.classList.add('popup-filter__store-item')
+                    const div = document.createElement('div')
+                    div.classList.add('popup-filter__store-item')
 
-                const title = document.createElement('h3')
-                title.classList.add('popup-filter__store-info')
-                title.textContent = item.name
-                div.appendChild(title)
+                    const title = document.createElement('h3')
+                    title.classList.add('popup-filter__store-info')
+                    title.textContent = item.name
+                    div.appendChild(title)
 
-                const address = document.createElement('p')
-                address.classList.add('popup-filter__store-info')
-                address.textContent = item.address
-                div.appendChild(address)
+                    const address = document.createElement('p')
+                    address.classList.add('popup-filter__store-info')
+                    address.textContent = item.address
+                    div.appendChild(address)
 
-                const phone = document.createElement('p')
-                phone.classList.add('popup-filter__store-info')
-                phone.textContent = item.phone
-                div.appendChild(phone)
+                    const phone = document.createElement('p')
+                    phone.classList.add('popup-filter__store-info')
+                    phone.textContent = item.phone
+                    div.appendChild(phone)
 
-                const website = document.createElement('p')
-                website.classList.add('popup-filter__store-info')
-                website.textContent = item.website
-                div.appendChild(website)
+                    const website = document.createElement('p')
+                    website.classList.add('popup-filter__store-info')
+                    website.textContent = item.website
+                    div.appendChild(website)
 
-                li.appendChild(div)
+                    li.appendChild(div)
 
-                const imgArrow = document.createElement('img')
-                imgArrow.src = './images/icon-goto-arrow.svg'
-                imgArrow.alt = 'go to icon'
-                imgArrow.classList.add('popup-filter__store-icon')
-                li.appendChild(imgArrow)
-                li.addEventListener('click', function () {
-                    popupPartnersList.style.display = "none";
-                    getCenter(item.address)
-                })
-                const partnersListContainerSmall = document.getElementById('partners-list-small')
-                partnersListContainerSmall.appendChild(li);
-                  }
-   
+                    const imgArrow = document.createElement('img')
+                    imgArrow.src = './images/icon-goto-arrow.svg'
+                    imgArrow.alt = 'go to icon'
+                    imgArrow.classList.add('popup-filter__store-icon')
+                    li.appendChild(imgArrow)
+                    li.addEventListener('click', function () {
+                        popupPartnersList.style.display = "none";
+                        getCenter(item.address)
+                    })
+                    const partnersListContainerSmall = document.getElementById('partners-list-small')
+                    partnersListContainerSmall.appendChild(li);
+                }
+
             }
             function filterCities() {
                 const searchText = searchInput.value.toLowerCase();
@@ -192,6 +193,7 @@ function init() {
                     li.classList.add('popup-filter__city')
                     citiesList.appendChild(li);
                     li.addEventListener('click', function () {
+                        localStorage.setItem('selectedCity', city);
                         const bigFilterCityPopup = document.getElementById('city-filter-big')
                         bigFilterCityPopup.textContent = city
                         cityFilterPopup.style.display = "none";
@@ -224,6 +226,8 @@ function init() {
                                 partnersListContainer.forEach(item => {
                                     item.innerHTML = ''
                                 })
+                                localStorage.clear()
+                                bigFilterCityPopup.textContent = 'Город'
                                 getQuery()
                             }
                         )
@@ -231,35 +235,45 @@ function init() {
                 });
             }
             filterCities()
-
             searchInput.addEventListener('input', filterCities);
 
             function getQuery() {
                 const selectedParts = Array.from(document.querySelectorAll('.popup-filter__engine-checkbox:checked')).map(checkbox => checkbox.value);
                 const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked')).map(checkbox => checkbox.value);
-                if ( selectedParts|| selectedPartners) {
+                if (selectedParts || selectedPartners) {
                     const queryParams = selectedPartners.map(tag => `tags=${tag}`).join('&') + `&` + selectedParts.map(id => `parts_available=${id}`).join('&')
-                const url = `http://158.160.154.213/api/partners/?${queryParams}`
-                console.log(url)
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        filteredPartnersList = data;
-                        const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked')
-                        const array = !checkedCheckboxes ? fetchedData : filteredPartnersList
-                        const openStores = getOpenStores(array);
-                        displayStores(openStores)
-                        createPartnersList(openStores)
-                    }) .catch(error => {
-                        console.error("Ошибка при получении данных:", error);
-                    });
+                    const url = `http://158.160.154.213/api/partners/?${queryParams}`
+                    console.log(url)
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            filteredPartnersList = data;
+                            const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked')
+                            const array = !checkedCheckboxes ? fetchedData : filteredPartnersList
+                            const openStores = getOpenStores(array);
+                            let selectedCity = localStorage.getItem('selectedCity')
+                            if (selectedCity) {
+                                const filteredCities = openStores.filter(item => {
+                                    return item.address.toLowerCase().includes(selectedCity.toLowerCase());
+                                });
+                                console.log(filteredCities)
+                                displayStores(filteredCities)
+                                createPartnersList(filteredCities)
+                            } else {
+                                displayStores(openStores)
+                                createPartnersList(openStores)
+                            }
+
+                        }).catch(error => {
+                            console.error("Ошибка при получении данных:", error);
+                        });
                 } else {
                     const array = checkedCheckboxes.length == 0 ? fetchedData : filteredPartnersList
-                        const openStores = getOpenStores(array);
-                        displayStores(openStores)
-                        createPartnersList(openStores)
+                    const openStores = getOpenStores(array);
+                    displayStores(openStores)
+                    createPartnersList(openStores)
                 }
-                   
+
             }
 
             function addPlacemark(data) {
@@ -317,6 +331,8 @@ function init() {
 
             addPlacemark(fetchedData)
 
+
+
             submitFilterButton.addEventListener("click", function (event) {
                 event.preventDefault()
                 const ul = document.querySelector('.filters-checked__partners');
@@ -359,7 +375,7 @@ function init() {
         .catch(e => {
             console.error(e)
         })
-       
+
 }
 
 ymaps.ready(init);
