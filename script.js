@@ -208,11 +208,11 @@ function init() {
                         list.forEach(item => {
                             createPartnersList(item)
                         })
-
+                       
                         const p = document.querySelector('.filters-checked__city');
                         p.classList.add('popup-filter__label-span');
                         p.textContent = city
-
+                        p.style.display = "block";
 
                         const del = document.createElement('button')
                         del.classList.add('popup-filter__del-button')
