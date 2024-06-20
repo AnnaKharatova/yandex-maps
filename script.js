@@ -1,12 +1,12 @@
 import { citiesArray } from './constants.js'
 
-/* MAP */
-
 const searchInput = document.getElementById('city-input');
 const partnersFilterPopup = document.getElementById("popup-partners-filter");
 const submitFilterButton = document.getElementById("filter-submit-button");
 const partnersFilterButton = document.getElementById("partner-filter");
 const toggleButton = document.getElementById('toggleButton')
+
+/* MAP */
 
 function init() {
     const popupPartnersList = document.getElementById('popup-partners-list')
@@ -38,7 +38,6 @@ function init() {
     fetch('http://158.160.154.213/api/partners/')
         .then(res => res.json())
         .then(resData => {
-
             const fetchedData = JSON.parse(JSON.stringify(resData))
             console.log(fetchedData)
 
@@ -125,7 +124,7 @@ function init() {
                         list.forEach(item => {
                             createPartnersList(item)
                         })
-                        
+
                         const p = document.querySelector('.filters-checked__city');
                         p.classList.add('popup-filter__label-span');
                         p.textContent = city
@@ -189,24 +188,6 @@ function init() {
             }
 
             addPlacemark(fetchedData)
-            function filterStoreList() {
-                const selectedParts = Array.from(document.querySelectorAll('.popup-filter__engine-checkbox:checked'))
-                selectedParts.map(checkbox => checkbox.value);
-                filteredStoreList = fetchedData.filter(store => {
-                    return selectedParts.some(selectedPart => {
-                        return store.parts_available.some(part => part.name === selectedPart);
-                    });
-                });
-            }
-
-            function filterPartnersList() {
-                const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked'))
-                selectedPartners.map(checkbox => checkbox.value);
-                const array = filteredStoreList.length == 0 ? fetchedData : filteredStoreList
-                filteredPartnersList = array.filter(store => {
-                    return store.tags.some(tag => selectedPartners.includes(tag.name));
-                });
-            }
 
             submitFilterButton.addEventListener("click", function (event) {
                 event.preventDefault()
@@ -215,15 +196,43 @@ function init() {
                 const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked');
                 checkedCheckboxes.forEach(checkbox => {
                     const li = document.createElement('li');
+                    const del = document.createElement('button')
                     li.classList.add('popup-filter__label-span');
-                    li.textContent = checkbox.value
+                    del.classList.add('popup-filter__del-button')
+                    del.textContent = `x`
+                    li.textContent = checkbox.name
+                    li.appendChild(del)
                     ul.appendChild(li)
+                    del.addEventListener('click',
+                        function () {
+                            checkbox.checked = false
+                            getQuery()
+                            li.style.display = "none";
+                        }
+                    )
                 })
-                filterPartnersList()
-                filterStoreList()
-                const list = filteredPartnersList.length == 0 ? filteredStoreList : filteredPartnersList
-                const array = checkedCheckboxes.length == 0 ? fetchedData : list
-                console.log(array)
+
+                function getQuery() {
+                    const selectedParts = Array.from(document.querySelectorAll('.popup-filter__engine-checkbox:checked')).map(checkbox => checkbox.value);
+                    const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked')).map(checkbox => checkbox.value);
+                    const queryParams = selectedPartners.map(tag => `tags=${tag}`).join('&') + `&` + selectedParts.map(id => `parts_available=${id}`).join('&')
+                    const url = `http://158.160.154.213/api/partners/?${queryParams}`
+                    console.log(url)
+                    fetch(url)
+                        .then(response => response.json())
+                        .then(data => {
+                            filteredPartnersList = data;
+                            const array = checkedCheckboxes.length == 0 ? fetchedData : filteredPartnersList
+                            const openStores = getOpenStores(array);
+                            displayStores(openStores)
+                            createPartnersList(openStores)
+                        })
+                        .catch(error => {
+                            console.error("Ошибка при получении данных:", error);
+                        });
+                }
+                getQuery()
+                const array = checkedCheckboxes.length == 0 ? fetchedData : filteredPartnersList
                 const openStores = getOpenStores(array);
                 displayStores(openStores)
                 createPartnersList(openStores)
@@ -236,7 +245,6 @@ function init() {
                 addPlacemark(array)
             }
         })
-
         .catch(e => {
             console.error(e)
         })
@@ -364,6 +372,24 @@ function getOpenStores(stores) {
 
 }
 
+/*  Фильтрация массива на фронте
+           
+           function filterStoreList() {
+               const selectedParts = Array.from(document.querySelectorAll('.popup-filter__engine-checkbox:checked')).map(checkbox => checkbox.value);
+               filteredStoreList = fetchedData.filter(store => {
+                   return selectedParts.some(selectedPart => {
+                       return store.parts_available.some(part => part.id === selectedPart);
+                   });
+               });
+           }
+
+           function filterPartnersList() {
+               const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked')).map(checkbox => checkbox.value);
+               const array = filteredStoreList.length == 0 ? fetchedData : filteredStoreList
+               filteredPartnersList = array.filter(store => {
+                   return store.tags.some(tag => selectedPartners.includes(tag.name));
+               });
+           } */
 
 
 

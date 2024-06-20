@@ -225,6 +225,9 @@ main {
         top: 265px;
         left: 50%;
     }
+    .filters-checked__city {
+        display: none;
+    }
 }
 
 .partners__filter-buttons {
@@ -251,6 +254,8 @@ main {
     gap: 4px;
 }
 
+
+
 .map__container {
     height: 100vh;
     width: 100%;
@@ -258,15 +263,18 @@ main {
 }
 
 .partners {
+    box-sizing: border-box;
     min-width: 30%;
-    max-height: 100vh;
+    max-height: 90%;
     padding: 20px;
     position: relative;
 }
 
 .partners__container {
-    height: 100vh;
-    overflow: scroll;
+    box-sizing: border-box;
+    max-height: 93vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 @media screen and (min-width: 750px) {
@@ -302,6 +310,7 @@ main {
     width: 100%;
     height: 30px;
     background-color: grey;
+    z-index: 2;
 }
 
 @media screen and (min-width: 750px) {
@@ -385,6 +394,14 @@ main {
         min-height: 70%;
         width: 33vw;
     }
+}
+
+.popup-filter__del-button {
+    font-size: 16px;
+    border: none;
+    margin-left: 10px;
+    cursor: pointer;
+    background-color: inherit;
 }
 
 .popup-filter__close-button {
