@@ -192,7 +192,6 @@ function init() {
                     li.classList.add('popup-filter__city')
                     citiesList.appendChild(li);
                     li.addEventListener('click', function () {
-                        currentCity = city
                         const bigFilterCityPopup = document.getElementById('city-filter-big')
                         bigFilterCityPopup.textContent = city
                         cityFilterPopup.style.display = "none";
