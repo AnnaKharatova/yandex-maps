@@ -93,14 +93,94 @@ function init() {
                 imgArrow.alt = 'go to icon'
                 imgArrow.classList.add('popup-filter__store-icon')
                 li.appendChild(imgArrow)
-
-                partnersListContainer.appendChild(li);
                 li.addEventListener('click', function () {
                     popupPartnersList.style.display = "none";
                     getCenter(item.address)
                 })
-            }
 
+                if (window.innerWidth >= 750) {
+                    const li = document.createElement('li');
+                    li.classList.add('popup-filter__store')
+    
+                    const div = document.createElement('div')
+                    div.classList.add('popup-filter__store-item')
+    
+                    const title = document.createElement('h3')
+                    title.classList.add('popup-filter__store-info')
+                    title.textContent = item.name
+                    div.appendChild(title)
+    
+                    const address = document.createElement('p')
+                    address.classList.add('popup-filter__store-info')
+                    address.textContent = item.address
+                    div.appendChild(address)
+    
+                    const phone = document.createElement('p')
+                    phone.classList.add('popup-filter__store-info')
+                    phone.textContent = item.phone
+                    div.appendChild(phone)
+    
+                    const website = document.createElement('p')
+                    website.classList.add('popup-filter__store-info')
+                    website.textContent = item.website
+                    div.appendChild(website)
+    
+                    li.appendChild(div)
+    
+                    const imgArrow = document.createElement('img')
+                    imgArrow.src = './images/icon-goto-arrow.svg'
+                    imgArrow.alt = 'go to icon'
+                    imgArrow.classList.add('popup-filter__store-icon')
+                    li.appendChild(imgArrow)
+                    li.addEventListener('click', function () {
+                        popupPartnersList.style.display = "none";
+                        getCenter(item.address)
+                    })
+                    const partnersListContainerBig = document.getElementById('partners-list-big')
+                    partnersListContainerBig.appendChild(li);
+                  } else {
+                    const li = document.createElement('li');
+                li.classList.add('popup-filter__store')
+
+                const div = document.createElement('div')
+                div.classList.add('popup-filter__store-item')
+
+                const title = document.createElement('h3')
+                title.classList.add('popup-filter__store-info')
+                title.textContent = item.name
+                div.appendChild(title)
+
+                const address = document.createElement('p')
+                address.classList.add('popup-filter__store-info')
+                address.textContent = item.address
+                div.appendChild(address)
+
+                const phone = document.createElement('p')
+                phone.classList.add('popup-filter__store-info')
+                phone.textContent = item.phone
+                div.appendChild(phone)
+
+                const website = document.createElement('p')
+                website.classList.add('popup-filter__store-info')
+                website.textContent = item.website
+                div.appendChild(website)
+
+                li.appendChild(div)
+
+                const imgArrow = document.createElement('img')
+                imgArrow.src = './images/icon-goto-arrow.svg'
+                imgArrow.alt = 'go to icon'
+                imgArrow.classList.add('popup-filter__store-icon')
+                li.appendChild(imgArrow)
+                li.addEventListener('click', function () {
+                    popupPartnersList.style.display = "none";
+                    getCenter(item.address)
+                })
+                const partnersListContainerSmall = document.getElementById('partners-list-small')
+                partnersListContainerSmall.appendChild(li);
+                  }
+   
+            }
             function filterCities() {
                 const searchText = searchInput.value.toLowerCase();
                 const filteredCities = citiesArray.filter(city => city.toLowerCase().startsWith(searchText));
@@ -112,6 +192,7 @@ function init() {
                     li.classList.add('popup-filter__city')
                     citiesList.appendChild(li);
                     li.addEventListener('click', function () {
+                        currentCity = city
                         const bigFilterCityPopup = document.getElementById('city-filter-big')
                         bigFilterCityPopup.textContent = city
                         cityFilterPopup.style.display = "none";
@@ -119,7 +200,9 @@ function init() {
                         filterCities()
                         getCenter(city)
                         const filteredByCities = findCity(city)
-                        partnersListContainer.innerHTML = ''
+                        partnersListContainer.forEach(item => {
+                            item.innerHTML = ''
+                        })
                         const list = filteredByCities.reverse()
                         list.forEach(item => {
                             createPartnersList(item)
@@ -128,11 +211,57 @@ function init() {
                         const p = document.querySelector('.filters-checked__city');
                         p.classList.add('popup-filter__label-span');
                         p.textContent = city
+
+
+                        const del = document.createElement('button')
+                        del.classList.add('popup-filter__del-button')
+                        del.textContent = `x`
+                        p.appendChild(del)
+
+                        del.addEventListener('click',
+                            function () {
+                                filterCities()
+                                p.style.display = "none";
+                                partnersListContainer.forEach(item => {
+                                    item.innerHTML = ''
+                                })
+                                getQuery()
+                            }
+                        )
                     })
                 });
             }
             filterCities()
+
             searchInput.addEventListener('input', filterCities);
+
+            function getQuery() {
+                const selectedParts = Array.from(document.querySelectorAll('.popup-filter__engine-checkbox:checked')).map(checkbox => checkbox.value);
+                const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked')).map(checkbox => checkbox.value);
+                if ( selectedParts|| selectedPartners) {
+                    const queryParams = selectedPartners.map(tag => `tags=${tag}`).join('&') + `&` + selectedParts.map(id => `parts_available=${id}`).join('&')
+                const url = `http://158.160.154.213/api/partners/?${queryParams}`
+                console.log(url)
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        filteredPartnersList = data;
+                        const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked')
+                        const array = !checkedCheckboxes ? fetchedData : filteredPartnersList
+                        const openStores = getOpenStores(array);
+                        displayStores(openStores)
+                        createPartnersList(openStores)
+                    }) .catch(error => {
+                        console.error("Ошибка при получении данных:", error);
+                    });
+                } else {
+                    const array = checkedCheckboxes.length == 0 ? fetchedData : filteredPartnersList
+                        const openStores = getOpenStores(array);
+                        displayStores(openStores)
+                        createPartnersList(openStores)
+                }
+                   
+            }
 
             function addPlacemark(data) {
                 const reversedStoreList = data.reverse()
@@ -211,46 +340,31 @@ function init() {
                         }
                     )
                 })
-
-                function getQuery() {
-                    const selectedParts = Array.from(document.querySelectorAll('.popup-filter__engine-checkbox:checked')).map(checkbox => checkbox.value);
-                    const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked')).map(checkbox => checkbox.value);
-                    const queryParams = selectedPartners.map(tag => `tags=${tag}`).join('&') + `&` + selectedParts.map(id => `parts_available=${id}`).join('&')
-                    const url = `http://158.160.154.213/api/partners/?${queryParams}`
-                    console.log(url)
-                    fetch(url)
-                        .then(response => response.json())
-                        .then(data => {
-                            filteredPartnersList = data;
-                            const array = checkedCheckboxes.length == 0 ? fetchedData : filteredPartnersList
-                            const openStores = getOpenStores(array);
-                            displayStores(openStores)
-                            createPartnersList(openStores)
-                        })
-                        .catch(error => {
-                            console.error("Ошибка при получении данных:", error);
-                        });
-                }
                 getQuery()
                 const array = checkedCheckboxes.length == 0 ? fetchedData : filteredPartnersList
                 const openStores = getOpenStores(array);
                 displayStores(openStores)
                 createPartnersList(openStores)
+                filterCities()
                 partnersFilterPopup.style.display = "none";
             });
 
             function displayStores(array) {
                 map.geoObjects.removeAll();
-                partnersListContainer.innerHTML = '';
+                partnersListContainer.forEach(item => {
+                    item.innerHTML = ''
+                })
                 addPlacemark(array)
             }
         })
         .catch(e => {
             console.error(e)
         })
+       
 }
 
 ymaps.ready(init);
+
 
 /* Бургер Меню */
 
@@ -304,7 +418,7 @@ bigFilterCityPopup.addEventListener("click", function () {
 
 const partnersListButton = document.getElementById('partners-list-button')
 const popupPartnersList = document.getElementById('popup-partners-list')
-const partnersListContainer = document.getElementById('partners-list')
+const partnersListContainer = document.querySelectorAll('.popup-filter__partners-list')
 
 partnersListButton.addEventListener("click", function () {
     popupPartnersList.style.display = "block";
