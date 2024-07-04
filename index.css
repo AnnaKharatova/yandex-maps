@@ -2,7 +2,6 @@
     0% {
         bottom: -50%;
     }
-
     100% {
         bottom: 0;
     }
@@ -12,7 +11,6 @@
     0% {
         left: -50%;
     }
-
     100% {
         left: 0;
     }
@@ -42,19 +40,16 @@ main {
     }
 }
 
-
 [class*='balloon'] {
     border-radius: 20px;
 }
 
 [class*='gotoymaps'] {
     display: none !important;
-    ;
 }
 
 [class*='gototaxi'] {
     display: none !important;
-    ;
 }
 
 [class*='gototech'] {
@@ -94,7 +89,6 @@ main {
     border-radius: 50%;
 }
 
-
 @media screen and (min-width: 750px) {
     .header__title {
         color: #ffff;
@@ -104,8 +98,6 @@ main {
         padding-left: 30px;
     }
 }
-
-
 
 .header__nav-burger {
     background-color: inherit;
@@ -135,9 +127,6 @@ main {
         display: none;
     }
 }
-
-
-
 
 /* Content */
 
@@ -175,7 +164,6 @@ main {
         font-size: 55px;
     }
 }
-
 
 .filter-buttons {
     width: 95%;
@@ -225,7 +213,6 @@ main {
         top: 265px;
         left: 50%;
     }
-
 }
 
 .partners__filter-buttons {
@@ -233,8 +220,6 @@ main {
     flex-direction: row;
     justify-content: space-between;
 }
-
-
 
 @media screen and (max-width: 750px) {
     .partners__filter-buttons {
@@ -251,8 +236,6 @@ main {
     flex-direction: row;
     gap: 4px;
 }
-
-
 
 .map__container {
     height: 100vh;
@@ -352,7 +335,6 @@ main {
     text-decoration: none;
     cursor: pointer;
     color: black;
-
 }
 
 .popup-filter {
@@ -465,7 +447,6 @@ main {
     color: white;
 }
 
-
 .popup-filter__submit-button {
     margin: 20px 0;
     background-color: white;
@@ -476,6 +457,7 @@ main {
 }
 
 /* Стили для кнопки переключения */
+
 .popup-filter__toggle {
     margin-top: 20px;
     position: relative;
@@ -491,6 +473,7 @@ main {
 }
 
 /* Стили для внешнего вида бегунка */
+
 .popup-filter__slider {
     position: absolute;
     cursor: pointer;

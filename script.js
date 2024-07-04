@@ -1,5 +1,7 @@
 import { citiesArray } from './constants.js'
 
+const BASE_URL = `https://yurasstroy.ddns.net/api`
+
 const searchInput = document.getElementById('city-input');
 const partnersFilterPopup = document.getElementById("popup-partners-filter");
 const submitFilterButton = document.getElementById("filter-submit-button");
@@ -36,7 +38,7 @@ function init() {
         toEnabled: true,
     })
 
-    fetch('http://158.160.154.213/api/partners/')
+    fetch(`${BASE_URL}/partners/`)
         .then(res => res.json())
         .then(resData => {
             const fetchedData = JSON.parse(JSON.stringify(resData))
@@ -184,55 +186,66 @@ function init() {
             }
             function filterCities() {
                 const searchText = searchInput.value.toLowerCase();
-                const filteredCities = citiesArray.filter(city => city.toLowerCase().startsWith(searchText));
-                citiesList.innerHTML = '';
-                const cityArray = filteredCities ? filteredCities : citiesArray
-                cityArray.forEach(city => {
-                    const li = document.createElement('li');
-                    li.textContent = city;
-                    li.classList.add('popup-filter__city')
-                    citiesList.appendChild(li);
-                    li.addEventListener('click', function () {
-                        localStorage.setItem('selectedCity', city);
-                        const bigFilterCityPopup = document.getElementById('city-filter-big')
-                        bigFilterCityPopup.textContent = city
-                        cityFilterPopup.style.display = "none";
-                        searchInput.value = ''
-                        filterCities()
-                        getCenter(city)
-                        const filteredByCities = findCity(city)
-                        partnersListContainer.forEach(item => {
-                            item.innerHTML = ''
-                        })
-                        const list = filteredByCities.reverse()
-                        list.forEach(item => {
-                            createPartnersList(item)
-                        })
-                       
-                        const p = document.querySelector('.filters-checked__city');
-                        p.classList.add('popup-filter__label-span');
-                        p.textContent = city
-                        p.style.display = "block";
+                fetch(`${BASE_URL}/cities`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const fetchedCities = JSON.parse(JSON.stringify(data))
+                        const citiesFetchedArray = fetchedCities.map(city => city.name);
 
-                        const del = document.createElement('button')
-                        del.classList.add('popup-filter__del-button')
-                        del.textContent = `x`
-                        p.appendChild(del)
+                        const filteredCities = citiesFetchedArray.filter(city => city.toLowerCase().startsWith(searchText));
+                        console.log(filteredCities)
 
-                        del.addEventListener('click',
-                            function () {
+                        citiesList.innerHTML = '';
+                        const cityArray = searchText ? filteredCities : citiesArray
+                        cityArray.forEach(city => {
+                            const li = document.createElement('li');
+                            li.textContent = city;
+                            li.classList.add('popup-filter__city')
+                            citiesList.appendChild(li);
+                            li.addEventListener('click', function () {
+                                localStorage.setItem('selectedCity', city);
+                                const bigFilterCityPopup = document.getElementById('city-filter-big')
+                                bigFilterCityPopup.textContent = city
+                                cityFilterPopup.style.display = "none";
+                                searchInput.value = ''
                                 filterCities()
-                                p.style.display = "none";
+                                getCenter(city)
+                                const filteredByCities = findCity(city)
                                 partnersListContainer.forEach(item => {
                                     item.innerHTML = ''
                                 })
-                                localStorage.clear()
-                                bigFilterCityPopup.textContent = 'Город'
-                                getQuery()
-                            }
-                        )
-                    })
-                });
+                                const list = filteredByCities.reverse()
+                                list.forEach(item => {
+                                    createPartnersList(item)
+                                })
+
+                                const p = document.querySelector('.filters-checked__city');
+                                p.classList.add('popup-filter__label-span');
+                                p.textContent = city
+                                p.style.display = "block";
+
+                                const del = document.createElement('button')
+                                del.classList.add('popup-filter__del-button')
+                                del.textContent = `x`
+                                p.appendChild(del)
+
+                                del.addEventListener('click',
+                                    function () {
+                                        filterCities()
+                                        p.style.display = "none";
+                                        partnersListContainer.forEach(item => {
+                                            item.innerHTML = ''
+                                        })
+                                        localStorage.clear()
+                                        bigFilterCityPopup.textContent = 'Город'
+                                        getQuery()
+                                    }
+                                )
+                            })
+                        })
+                    }).catch(error => {
+                        console.error("Ошибка при получении данных:", error);
+                    });
             }
             filterCities()
             searchInput.addEventListener('input', filterCities);
@@ -242,7 +255,7 @@ function init() {
                 const selectedPartners = Array.from(document.querySelectorAll('.popup-filter__partners-checkbox:checked')).map(checkbox => checkbox.value);
                 if (selectedParts || selectedPartners) {
                     const queryParams = selectedPartners.map(tag => `tags=${tag}`).join('&') + `&` + selectedParts.map(id => `parts_available=${id}`).join('&')
-                    const url = `http://158.160.154.213/api/partners/?${queryParams}`
+                    const url = `${BASE_URL}/partners/?${queryParams}`
                     console.log(url)
                     fetch(url)
                         .then(response => response.json())
@@ -273,7 +286,6 @@ function init() {
                     displayStores(openStores)
                     createPartnersList(openStores)
                 }
-
             }
 
             function addPlacemark(data) {
@@ -375,11 +387,9 @@ function init() {
         .catch(e => {
             console.error(e)
         })
-
 }
 
 ymaps.ready(init);
-
 
 /* Бургер Меню */
 
@@ -396,6 +406,23 @@ popupCloseButton.addEventListener('click', () => {
 });
 
 /* Фильтр */
+
+fetch(`${BASE_URL}/tags`)
+    .then(response => response.json())
+    .then(data => {
+        let html = ""
+        data.forEach(tag => {
+            html += `
+    <label class="popup-filter__label" for="partner-${tag.id.toString().toLowerCase()}">
+      <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-${tag.id.toString().toLowerCase()}" name="${tag.name}" value="${tag.id}" />
+      <span class="popup-filter__label-span">${tag.name}</span>
+    </label>
+  `;
+        });
+        document.getElementById('partners-section').innerHTML = html;
+    }).catch(error => {
+        console.error("Ошибка при получении данных:", error);
+    });
 
 partnersFilterButton.addEventListener("click", function () {
     partnersFilterPopup.style.display = "block";

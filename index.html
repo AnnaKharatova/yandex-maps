@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maps</title>
     <link rel="stylesheet" href="index.css">
+    <!--  <link rel="stylesheet" href="{% static 'index.css' %}">  -->
 </head>
 
 <body>
@@ -116,27 +117,27 @@
                 </section>
 
                 <h3>Партнеры</h3>
-                <section class="popup-filter__section">
-                    <label class="popup-filter__label" for="partner-shop">
-                        <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-shop"
-                            name="Магазин" value="2" />
-                        <span class="popup-filter__label-span">Магазин</span>
+                <section class="popup-filter__section" id="partners-section">
+                    <!-- <label class="popup-filter__label" for="partner-shop">
+                        <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-shop" name="Магазин"
+                            value="2" />
+                        <span class="popup-filter__label-span">Розничный Магазин</span>
                     </label>
                     <label class="popup-filter__label" for="partner-service">
                         <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-service"
-                            name="Автосервис" value="1" />
+                            name="Автосервис" value="5" />
                         <span class="popup-filter__label-span">Автосервис</span>
                     </label>
                     <label class="popup-filter__label" for="partner-opt">
                         <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-opt"
-                            name="Оптовый склад" value="0" />
+                            name="Оптовый склад" value="3" />
                         <span class="popup-filter__label-span">Оптовый склад</span>
                     </label>
                     <label class="popup-filter__label" for="partner-dealer">
-                        <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-dealer"
-                            name="Дилер" value="0" />
+                        <input class="popup-filter__partners-checkbox" type="checkbox" id="partner-dealer" name="Дилер"
+                            value="1" />
                         <span class="popup-filter__label-span">Дилер</span>
-                    </label>
+                    </label> -->
                 </section>
 
 
@@ -172,6 +173,7 @@
     </div>
 
     <script type="module" src="script.js"></script>
+    <!--  <script type="module" src="{% static 'script.js' %}"></script>  -->
 </body>
 
 </html>
