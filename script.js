@@ -191,10 +191,7 @@ function init() {
                     .then(data => {
                         const fetchedCities = JSON.parse(JSON.stringify(data))
                         const citiesFetchedArray = fetchedCities.map(city => city.name);
-
                         const filteredCities = citiesFetchedArray.filter(city => city.toLowerCase().startsWith(searchText));
-                        console.log(filteredCities)
-
                         citiesList.innerHTML = '';
                         const cityArray = searchText ? filteredCities : citiesArray
                         cityArray.forEach(city => {
