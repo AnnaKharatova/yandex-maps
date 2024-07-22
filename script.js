@@ -11,11 +11,10 @@ const toggleButton = document.getElementById('toggleButton')
 /* MAP */
 
 function init() {
-    const popupPartnersList = document.getElementById('popup-partners-list')
+    const popupPartnersList = document.getElementById('popup-partners-list');
 
     let filteredStoreList = [];
     let filteredPartnersList = [];
-
 
     const map = new ymaps.Map('map', {
         center: [55.753962, 37.620393],
@@ -23,11 +22,26 @@ function init() {
         controls: ['smallMapDefaultSet', 'routeButtonControl']
     });
 
-    map.controls.remove('trafficControl')
+    map.controls.remove('trafficControl');
     map.controls.remove('typeSelector');
-    map.controls.remove("taxi")
+    map.controls.remove("taxi");
 
-    const control = map.controls.get('routeButtonControl')
+    const control = map.controls.get('routeButtonControl');
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const userLocation = [position.coords.latitude, position.coords.longitude];
+                map.setCenter(userLocation);
+                map.setZoom(8);
+            },
+            (error) => {
+                console.error("Ошибка получения местоположения:", error);
+            }
+        );
+    } else {
+        console.warn("Геолокация не доступна");
+    }
 
     control.routePanel.options.set({
         types: {
@@ -63,8 +77,20 @@ function init() {
             }
 
             function createPartnersList(item) {
-                const li = document.createElement('li');
-                li.classList.add('popup-filter__store')
+                if (window.innerWidth >= 750) {
+                    let html = ""
+                    item.forEach(partner => {
+                        html += `
+                        <li class='popup-filter__store'>
+                        ${partner.address}
+                        </li> `;
+                    })
+
+                    document.getElementById('partners-list-big').innerHTML = html;
+                }
+
+                /* const li = document.createElement('li');
+                li.classList.add('')
 
                 const div = document.createElement('div')
                 div.classList.add('popup-filter__store-item')
@@ -100,48 +126,9 @@ function init() {
                     popupPartnersList.style.display = "none";
                     getCenter(item.address)
                 })
-
-                if (window.innerWidth >= 750) {
-                    const li = document.createElement('li');
-                    li.classList.add('popup-filter__store')
-
-                    const div = document.createElement('div')
-                    div.classList.add('popup-filter__store-item')
-
-                    const title = document.createElement('h3')
-                    title.classList.add('popup-filter__store-info')
-                    title.textContent = item.name
-                    div.appendChild(title)
-
-                    const address = document.createElement('p')
-                    address.classList.add('popup-filter__store-info')
-                    address.textContent = item.address
-                    div.appendChild(address)
-
-                    const phone = document.createElement('p')
-                    phone.classList.add('popup-filter__store-info')
-                    phone.textContent = item.phone
-                    div.appendChild(phone)
-
-                    const website = document.createElement('p')
-                    website.classList.add('popup-filter__store-info')
-                    website.textContent = item.website
-                    div.appendChild(website)
-
-                    li.appendChild(div)
-
-                    const imgArrow = document.createElement('img')
-                    imgArrow.src = './images/icon-goto-arrow.svg'
-                    imgArrow.alt = 'go to icon'
-                    imgArrow.classList.add('popup-filter__store-icon')
-                    li.appendChild(imgArrow)
-                    li.addEventListener('click', function () {
-                        popupPartnersList.style.display = "none";
-                        getCenter(item.address)
-                    })
-                    const partnersListContainerBig = document.getElementById('partners-list-big')
-                    partnersListContainerBig.appendChild(li);
-                } else {
+                const partnersListContainerBig = document.getElementById('partners-list-big')
+                partnersListContainerBig.appendChild(li); */
+                else {
                     const li = document.createElement('li');
                     li.classList.add('popup-filter__store')
 
@@ -184,6 +171,8 @@ function init() {
                 }
 
             }
+
+
             function filterCities() {
                 const searchText = searchInput.value.toLowerCase();
                 fetch(`${BASE_URL}/cities`)
@@ -212,9 +201,8 @@ function init() {
                                     item.innerHTML = ''
                                 })
                                 const list = filteredByCities.reverse()
-                                list.forEach(item => {
-                                    createPartnersList(item)
-                                })
+                                createPartnersList(list)
+
 
                                 const p = document.querySelector('.filters-checked__city');
                                 p.classList.add('popup-filter__label-span');
@@ -244,6 +232,7 @@ function init() {
                         console.error("Ошибка при получении данных:", error);
                     });
             }
+
             filterCities()
             searchInput.addEventListener('input', filterCities);
 
@@ -334,13 +323,11 @@ function init() {
                     });
 
                     map.geoObjects.add(placemark);
-                    createPartnersList(store)
+                    createPartnersList(data)
                 });
             }
 
             addPlacemark(fetchedData)
-
-
 
             submitFilterButton.addEventListener("click", function (event) {
                 event.preventDefault()
@@ -404,7 +391,7 @@ popupCloseButton.addEventListener('click', () => {
 
 /* Фильтр */
 
-fetch(`${BASE_URL}/tags`)
+fetch(`${BASE_URL}/tags/`)
     .then(response => response.json())
     .then(data => {
         let html = ""
@@ -417,6 +404,28 @@ fetch(`${BASE_URL}/tags`)
   `;
         });
         document.getElementById('partners-section').innerHTML = html;
+    }).catch(error => {
+        console.error("Ошибка при получении данных:", error);
+    });
+
+partnersFilterButton.addEventListener("click", function () {
+    partnersFilterPopup.style.display = "block";
+});
+
+fetch(`${BASE_URL}/engines/`)
+    .then(response => response.json())
+    .then(data => {
+        let html = ""
+        data.forEach(item => {
+            html += `
+
+    <label class="popup-filter__label" for="engine-${item.id.toString().toLowerCase()}">
+      <input class="popup-filter__engine-checkbox" type="checkbox" id="engine-${item.id.toString().toLowerCase()}" name="${item.name}" value="${item.id}" />
+      <span class="popup-filter__label-span">${item.name}</span>
+    </label>
+  `;
+        });
+        document.getElementById('engines-section').innerHTML = html;
     }).catch(error => {
         console.error("Ошибка при получении данных:", error);
     });

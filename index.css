@@ -1,7 +1,10 @@
+@import url(./fonts/fonts.css);
+
 @keyframes slideUp {
     0% {
         bottom: -50%;
     }
+
     100% {
         bottom: 0;
     }
@@ -11,12 +14,14 @@
     0% {
         left: -50%;
     }
+
     100% {
         left: 0;
     }
 }
 
 body {
+    font-family: 'IBMPlexSans', Arial, sans-serif;
     background-color: white;
     min-width: 375px;
     max-width: 1900px;
@@ -63,23 +68,29 @@ main {
 /* header */
 
 .header {
+    background-color: black;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 3;
     display: flex;
     justify-content: space-between;
-    width: 95%;
+    width: 100%;
     margin: 0 auto;
-}
-
-@media screen and (min-width: 750px) {
-    .header {
-        background-color: black;
-        width: 100%;
-    }
 }
 
 .header__main {
     display: flex;
     gap: 15px;
     align-items: center;
+    padding-left: 64px;
+}
+
+.header__title {
+    color: #ffff;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 28px;
 }
 
 .header__logo {
@@ -87,16 +98,6 @@ main {
     width: 30px;
     background-color: gray;
     border-radius: 50%;
-}
-
-@media screen and (min-width: 750px) {
-    .header__title {
-        color: #ffff;
-    }
-
-    .header__main {
-        padding-left: 30px;
-    }
 }
 
 .header__nav-burger {
@@ -111,15 +112,34 @@ main {
 }
 
 .header__item {
-    padding-right: 30px;
+    padding-right: 50px;
     text-decoration: none;
     color: #ffff;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20.8px;
+    text-align: center;
+}
+
+.header__item-catalog {
+    padding-right: 50px;
+    text-decoration: none;
+    color: #ffff;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 20.8px;
+    text-align: center;
+    background-image: url('./images/icon-arrow-down-white.svg');
+    background-repeat: no-repeat;
+    background-position: 5% 50%;
 }
 
 .header__nav {
+    padding: 30px;
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    text-align: center;
-    padding-top: 15px;
+    gap: 30px;
 }
 
 @media screen and (min-width: 750px) {
@@ -131,71 +151,96 @@ main {
 /* Content */
 
 .bunner {
-    width: 95%;
+    width: 100%;
     height: 80px;
     background-color: grey;
-    margin: 0 auto;
-}
-
-@media screen and (min-width: 750px) {
-    .bunner {
-        width: 100%;
-    }
+    margin: 90px auto 0;
 }
 
 .title {
-    font-size: 20px;
-    margin-left: 10px;
+    border-bottom: 1px solid #E8E8E8;
+    margin-left: 0;
+    padding-left: 64px;
+    margin-bottom: 0;
+    padding-bottom: 25px;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 89.6px;
+    letter-spacing: -0.02em;
 }
 
-@media screen and (min-width: 750px) {
-    .title {
-        font-size: 34px;
-        border-bottom: 1px solid gainsboro;
-        margin-left: 0;
-        padding-left: 20px;
-        margin-bottom: 0;
-        padding-bottom: 25px;
-    }
+.partners {
+    box-sizing: border-box;
+    min-width: 32%;
+    max-height: 90%;
+    padding: 20px 10px 24px 64px;
+    position: relative;
 }
 
-@media screen and (min-width: 1024px) {
-    .title {
-        font-size: 55px;
-    }
-}
-
-.filter-buttons {
-    width: 95%;
-    margin: 0 auto;
+.partners__filter-buttons {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    gap: 10px;
+    margin-right: 24px;
+    gap: 20px;
 }
 
-@media screen and (min-width: 750px) {
-    .filter-buttons {
-        display: none;
-    }
+.filter-buttons__city-button {
+    display: inline;
+    border: 1px solid #C4C4C4;
+    width: 216px;
+    height: 37px;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background-color: inherit;
+    text-align: left;
+    position: relative;
+    box-sizing: border-box;
+    color: #191919;
+    cursor: pointer;
+}
+
+.filter-buttons__delete-city {
+    display: inline;
+    position: absolute;
+    background-color: inherit;
+    border: none;
+    top: 2%;
+    left: 50%;
+    font-size: 30px;
+    font-weight: 400;
+    color: #858582;
+    cursor: pointer;
 }
 
 .filter-buttons__button {
-    background-color: inherit;
-    border-radius: 4px;
-    border: 1px solid gray;
-    height: 30px;
-    min-width: 150px;
     background-image: url('./images/icon-filter-button.svg');
     background-repeat: no-repeat;
-    background-position: 95% 50%;
-    padding-right: 30px;
-    margin-bottom: 15px;
+    background-position: 5% 50%;
+    border: 1px solid #C4C4C4;
+    width: 136px;
+    height: 37px;
+    padding: 4px 8px 4px 30px;
+    border-radius: 8px;
+    background-color: inherit;
+    color: #191919;
+    cursor: pointer;
 }
 
 .filter-buttons__button:hover {
     cursor: pointer;
     background-color: #aaa;
+}
+
+.filter-buttons__button-item {
+    padding-left: 10px;
+    color: #1347FF;
+}
+
+.partners__container {
+    box-sizing: border-box;
+    max-height: 93vh;
+    overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .filters-checked {
@@ -206,6 +251,13 @@ main {
     margin: 0 10px 10px;
 }
 
+
+@media screen and (min-width: 750px) {
+    .filter-buttons {
+        display: none;
+    }
+}
+
 @media screen and (min-width: 750px) {
     .filters-checked {
         position: absolute;
@@ -213,12 +265,6 @@ main {
         top: 265px;
         left: 50%;
     }
-}
-
-.partners__filter-buttons {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
 }
 
 @media screen and (max-width: 750px) {
@@ -241,21 +287,6 @@ main {
     height: 100vh;
     width: 100%;
     margin: 0;
-}
-
-.partners {
-    box-sizing: border-box;
-    min-width: 30%;
-    max-height: 90%;
-    padding: 20px;
-    position: relative;
-}
-
-.partners__container {
-    box-sizing: border-box;
-    max-height: 93vh;
-    overflow-y: scroll;
-    overflow-x: hidden;
 }
 
 @media screen and (min-width: 750px) {

@@ -35,10 +35,8 @@
         </div>
         <button class="header__nav-burger" id="header-nav-burger"></button>
         <nav class="header__nav">
-            <a class="header__item" href="#">Каталог &#8744;</a>
-            <a class="header__item" href="#">Добавить партнера</a>
-            <a class="header__item" href="#">Контакты</a>
-            <a class="header__item" href="#">+7 999 999 99 99</a>
+            <a class="header__item-catalog" href="#">КАТАЛОГ</a>
+            <a class="header__item" href="#">ДОБАВИТЬ ПАРТНЁРА</a>
         </nav>
     </header>
     <main>
@@ -55,8 +53,14 @@
         <div class="map">
             <div class="partners">
                 <div class="partners__filter-buttons">
-                    <button class="filter-buttons__button" id="city-filter-big">Город</button>
-                    <button class="filter-buttons__button" id="partner-filter-big">Фильтры</button>
+                    <button class="filter-buttons__city-button" id="city-filter-big">
+                        Город
+                        <button class="filter-buttons__delete-city">&times;</button>
+                    </button>
+                    <button class="filter-buttons__button" id="partner-filter-big">
+                        Фильтры
+                        <span class='filter-buttons__button-item'></span>
+                    </button>
                 </div>
                 <div class="partners__container">
                     <ul class="popup-filter__partners-list" id="partners-list-big"></ul>
@@ -79,9 +83,9 @@
             <h2 class="popup-filter__title">Фильтры</h2>
             <form class="popup-filter__form">
                 <h3>Типы двигателя</h3>
-                <section class="popup-filter__section">
+                <section class="popup-filter__section" id="engines-section">
 
-                    <label class="popup-filter__label" for="KAMAZ_R6">
+                    <!-- <label class="popup-filter__label" for="KAMAZ_R6">
                         <input class="popup-filter__engine-checkbox" type="checkbox" id="KAMAZ_R6" name="KAMAZ_R6"
                             value="3" />
                         <span class="popup-filter__label-span">Kamaz-R6</span>
@@ -113,7 +117,7 @@
                     <label class="popup-filter__label" for="GAZ">
                         <input class="popup-filter__engine-checkbox" type="checkbox" id="GAZ" name="GAZ" value="6" />
                         <span class="popup-filter__label-span">GAZ</span>
-                    </label>
+                    </label> -->
                 </section>
 
                 <h3>Партнеры</h3>
