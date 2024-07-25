@@ -7,6 +7,11 @@ const partnersFilterPopup = document.getElementById("popup-partners-filter");
 const submitFilterButton = document.getElementById("filter-submit-button");
 const partnersFilterButton = document.getElementById("partner-filter");
 const toggleButton = document.getElementById('toggleButton')
+const bigFilterCityPopup = document.getElementById('city-filter-big')
+let selectedCity = sessionStorage.getItem('selectedCity')
+const cityFilterPopup = document.getElementById("popup-city-filter");
+
+sessionStorage.clear()
 
 /* MAP */
 
@@ -34,6 +39,14 @@ function init() {
                 const userLocation = [position.coords.latitude, position.coords.longitude];
                 map.setCenter(userLocation);
                 map.setZoom(8);
+                /* здесь город сразу распознается при загрузки, есть сложности в реализации фильтрации списка партнеров
+                 ymaps.geocode(userLocation).then(res => {
+                    const firstGeoObject = res.geoObjects.get(0);
+                    const address = firstGeoObject.getAddressLine();
+                    const city = address.split(",")[0].trim();
+                    bigFilterCityPopup.textContent = city
+                    sessionStorage.setItem('selectedCity', city);
+                }); */
             },
             (error) => {
                 console.error("Ошибка получения местоположения:", error);
@@ -51,6 +64,10 @@ function init() {
         fromEnabled: true,
         toEnabled: true,
     })
+
+    if (selectedCity) {
+        bigFilterCityPopup.textContent = selectedCity
+    }
 
     fetch(`${BASE_URL}/partners/`)
         .then(res => res.json())
@@ -81,53 +98,36 @@ function init() {
                     let html = ""
                     item.forEach(partner => {
                         html += `
-                        <li class='popup-filter__store'>
-                        ${partner.address}
+                        <li class='partner'>
+                           <p class='partner__engines'>${partner.parts_available.map(part => part.name).join(`<span class='partner__engines-dot'></span>`)}</p>
+                           <h2 class='partner__name'>${partner.name}</h2>
+                           <p class='partner__address'>${partner.address}</p>
+                           <div class='partner__contacts'>
+                             <a href=${partner.phone} class="partner__phone">${partner.phone}</a>
+                             <a href=${partner.website} class="partner__website target="_blank"">${partner.website}</a>
+                           </div>
+                           <div class='partner__block'>
+                           ${partner.time_open_weekdays || partner.time_open_saturday || partner.time_open_sunday ?
+                                `<div class='partner__open'>
+                                    ${partner.time_open_weekdays ? `<p class='partner__open-time'>c ${partner.time_open_weekdays} до ${partner.time_close_weekdays}</p>` : '<p></p>'}
+                                    ${partner.time_open_saturday ? `<p class='partner__open-time'>cб: ${partner.time_open_saturday} - ${partner.time_close_saturday}</p>` : '<p></p>'}
+                                    ${partner.time_open_sunday ? `<p class='partner__open-time'>воскр: ${partner.time_open_sunday} - ${partner.time_close_sunday}</p>` : '<p></p>'}
+                                </div>` : '<p></p>'
+                            }
+                                <button class="route-button">Маршрут</button>
+                           </div>
                         </li> `;
+                        const routeButtons = document.querySelectorAll('.route-button');
+                        routeButtons.forEach(button => {
+                            button.addEventListener('click', (event) => {
+                                const item = event.currentTarget;
+                                console.log(item)
+                            });
+                        });
                     })
-
                     document.getElementById('partners-list-big').innerHTML = html;
+
                 }
-
-                /* const li = document.createElement('li');
-                li.classList.add('')
-
-                const div = document.createElement('div')
-                div.classList.add('popup-filter__store-item')
-
-                const title = document.createElement('h3')
-                title.classList.add('popup-filter__store-info')
-                title.textContent = item.name
-                div.appendChild(title)
-
-                const address = document.createElement('p')
-                address.classList.add('popup-filter__store-info')
-                address.textContent = item.address
-                div.appendChild(address)
-
-                const phone = document.createElement('p')
-                phone.classList.add('popup-filter__store-info')
-                phone.textContent = item.phone
-                div.appendChild(phone)
-
-                const website = document.createElement('p')
-                website.classList.add('popup-filter__store-info')
-                website.textContent = item.website
-                div.appendChild(website)
-
-                li.appendChild(div)
-
-                const imgArrow = document.createElement('img')
-                imgArrow.src = './images/icon-goto-arrow.svg'
-                imgArrow.alt = 'go to icon'
-                imgArrow.classList.add('popup-filter__store-icon')
-                li.appendChild(imgArrow)
-                li.addEventListener('click', function () {
-                    popupPartnersList.style.display = "none";
-                    getCenter(item.address)
-                })
-                const partnersListContainerBig = document.getElementById('partners-list-big')
-                partnersListContainerBig.appendChild(li); */
                 else {
                     const li = document.createElement('li');
                     li.classList.add('popup-filter__store')
@@ -169,10 +169,30 @@ function init() {
                     const partnersListContainerSmall = document.getElementById('partners-list-small')
                     partnersListContainerSmall.appendChild(li);
                 }
-
             }
 
-
+            function getRoute(store) {
+                // Код для получения маршрута с использованием координат партнера
+                let location = ymaps.geolocation.get();
+                location.then(function (res) {
+                    let locationText = res.geoObjects.get(0).properties.get('text');
+                    control.routePanel.state.set({
+                        state: "expanded",
+                        from: locationText,
+                        to: `${store.latitude},${store.longitude}`,
+                    });
+                    const multiRoute = new ymaps.multiRouter.MultiRoute({
+                        referencePoints: [
+                            [locationText],
+                            [store.latitude, store.longitude]
+                        ],
+                        params: {
+                            routingMode: 'auto'
+                        }
+                    });
+                    map.geoObjects.add(multiRoute);
+                });
+            }
             function filterCities() {
                 const searchText = searchInput.value.toLowerCase();
                 fetch(`${BASE_URL}/cities`)
@@ -183,14 +203,38 @@ function init() {
                         const filteredCities = citiesFetchedArray.filter(city => city.toLowerCase().startsWith(searchText));
                         citiesList.innerHTML = '';
                         const cityArray = searchText ? filteredCities : citiesArray
+                        if (cityArray.length == 0 && searchText) {
+
+                            const container = document.createElement('div');
+                            container.classList.add('popup-filter__no-city')
+
+                            const sadFace = document.createElement('img')
+                            sadFace.classList.add('popup-filter__no-city-img')
+                            sadFace.src = './images/Icon-sadFace.svg'
+                            sadFace.alt = 'грустный смайлик'
+                            container.appendChild(sadFace)
+
+                            const title = document.createElement('h3')
+                            title.classList.add('popup-filter__no-city-message')
+                            title.textContent = 'Ничего не нашлось'
+                            container.appendChild(title)
+
+                            const text = document.createElement('p')
+                            text.classList.add('popup-filter__no-city-text')
+                            text.textContent = 'В этом городе нет наших официальных представителей'
+                            container.appendChild(text)
+
+                            const citesList = document.getElementById('cities-list')
+                            citesList.appendChild(container)
+
+                        }
                         cityArray.forEach(city => {
                             const li = document.createElement('li');
                             li.textContent = city;
                             li.classList.add('popup-filter__city')
                             citiesList.appendChild(li);
                             li.addEventListener('click', function () {
-                                localStorage.setItem('selectedCity', city);
-                                const bigFilterCityPopup = document.getElementById('city-filter-big')
+                                sessionStorage.setItem('selectedCity', city);
                                 bigFilterCityPopup.textContent = city
                                 cityFilterPopup.style.display = "none";
                                 searchInput.value = ''
@@ -221,7 +265,21 @@ function init() {
                                         partnersListContainer.forEach(item => {
                                             item.innerHTML = ''
                                         })
-                                        localStorage.clear()
+                                        sessionStorage.clear()
+                                        bigFilterCityPopup.textContent = 'Город'
+                                        getQuery()
+                                    }
+                                )
+
+                                const clearCityFilter = document.querySelector('.filter-buttons__delete-city')
+                                clearCityFilter.addEventListener('click',
+                                    function () {
+                                        filterCities()
+                                        p.style.display = "none";
+                                        partnersListContainer.forEach(item => {
+                                            item.innerHTML = ''
+                                        })
+                                        sessionStorage.clear()
                                         bigFilterCityPopup.textContent = 'Город'
                                         getQuery()
                                     }
@@ -247,15 +305,14 @@ function init() {
                         .then(response => response.json())
                         .then(data => {
                             filteredPartnersList = data;
+                            console.log(filteredPartnersList)
                             const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked')
                             const array = !checkedCheckboxes ? fetchedData : filteredPartnersList
                             const openStores = getOpenStores(array);
-                            let selectedCity = localStorage.getItem('selectedCity')
                             if (selectedCity) {
                                 const filteredCities = openStores.filter(item => {
                                     return item.address.toLowerCase().includes(selectedCity.toLowerCase());
                                 });
-                                console.log(filteredCities)
                                 displayStores(filteredCities)
                                 createPartnersList(filteredCities)
                             } else {
@@ -287,8 +344,7 @@ function init() {
                         <p>Часы работы:</p>
                         <p>Будни: ${store.time_open_weekdays} - ${store.time_close_weekdays} </p>
                         <p>Суббота: ${store.time_open_saturday} - ${store.time_close_saturday} </p>
-                        <p>Воскресенье: ${store.time_open_sunday} - ${store.time_close_sunday} </p>
-                        <button class="route-button">Построить маршрут</button>`,
+                        <p>Воскресенье: ${store.time_open_sunday} - ${store.time_close_sunday} </p>`,
                         balloonContentFooter: `Наш сайт: <a href=${store.website}>${store.website}</a>`
                     }, {
                         iconLayout: 'default#image',
@@ -358,6 +414,9 @@ function init() {
                 createPartnersList(openStores)
                 filterCities()
                 partnersFilterPopup.style.display = "none";
+                const filtersLenght = checkedCheckboxes.length
+                const filterButtonSpan = document.querySelector('.filter-buttons__button-item')
+                filterButtonSpan.textContent = filtersLenght
             });
 
             function displayStores(array) {
@@ -367,6 +426,8 @@ function init() {
                 })
                 addPlacemark(array)
             }
+
+
         })
         .catch(e => {
             console.error(e)
@@ -442,9 +503,8 @@ bigFilterPopup.addEventListener("click", function () {
 
 /* Фильтр по городам */
 
-const cityFilterPopup = document.getElementById("popup-city-filter");
 const cityFilterButton = document.getElementById("city-filter");
-const closeButtonCity = document.getElementsByClassName("popup-filter__close-button")[2];
+const closeButtonCity = document.querySelector(".popup-filter__back-button");
 const citiesList = document.getElementById('cities-list')
 
 cityFilterButton.addEventListener("click", function () {
@@ -456,11 +516,11 @@ closeButtonCity.addEventListener("click", function () {
     searchInput.value = ''
 });
 
-const bigFilterCityPopup = document.getElementById('city-filter-big')
 
 bigFilterCityPopup.addEventListener("click", function () {
     cityFilterPopup.style.display = "block";
 });
+
 
 /* Список партнеров */
 
