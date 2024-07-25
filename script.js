@@ -339,16 +339,11 @@ function init() {
                         balloonContentBody:
                             `<p>${store.tags.map(tag => tag.name)}</p>
                         <p>Адрес: ${store.address}</p> 
-                        <p>Тел:${store.phone}</p> 
-                        <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p>
-                        <p>Часы работы:</p>
-                        <p>Будни: ${store.time_open_weekdays} - ${store.time_close_weekdays} </p>
-                        <p>Суббота: ${store.time_open_saturday} - ${store.time_close_saturday} </p>
-                        <p>Воскресенье: ${store.time_open_sunday} - ${store.time_close_sunday} </p>`,
-                        balloonContentFooter: `Наш сайт: <a href=${store.website}>${store.website}</a>`
+                        <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p>`
+                  
                     }, {
                         iconLayout: 'default#image',
-                        iconImageHref: 'https://cdn-icons-png.flaticon.com/512/3179/3179068.png',
+                        iconImageHref: './images/Map_hover.svg',
                         iconImageSize: [25, 25],
                         iconImageOffset: [0, 0]
                     });
