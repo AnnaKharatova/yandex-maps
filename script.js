@@ -293,6 +293,7 @@ function init() {
 
             filterCities()
             searchInput.addEventListener('input', filterCities);
+            let openStores
 
             function getQuery() {
                 const selectedParts = Array.from(document.querySelectorAll('.popup-filter__engine-checkbox:checked')).map(checkbox => checkbox.value);
@@ -308,7 +309,7 @@ function init() {
                             console.log(filteredPartnersList)
                             const checkedCheckboxes = document.querySelectorAll('input[type="checkbox"]:checked')
                             const array = !checkedCheckboxes ? fetchedData : filteredPartnersList
-                            const openStores = getOpenStores(array);
+                            openStores = getOpenStores(array);
                             if (selectedCity) {
                                 const filteredCities = openStores.filter(item => {
                                     return item.address.toLowerCase().includes(selectedCity.toLowerCase());
@@ -335,12 +336,16 @@ function init() {
                 const reversedStoreList = data.reverse()
                 reversedStoreList.forEach(store => {
                     const placemark = new ymaps.Placemark([store.latitude, store.longitude], {
-                        balloonContentHeader: store.name,
                         balloonContentBody:
-                            `<p>${store.tags.map(tag => tag.name)}</p>
-                        <p>Адрес: ${store.address}</p> 
-                        <p>Ассортимент: ${store.parts_available.map(part => part.name).join(', ')}</p>`
-                  
+                            `<div class='ballon'>
+                                <p class='ballon__header'>${store.name}</p>
+                                <p class='balloon__text'>${store.tags.map(tag => tag.name)}</p>
+                                <p class='balloon__text'>${store.address}</p> 
+                                <div class='ballon__status'>
+                                    <div class='baloon__status-dot'></div>
+                                    <p class='balloon__text'>Открыто</p>
+                                </div>
+                            </div>`
                     }, {
                         iconLayout: 'default#image',
                         iconImageHref: './images/Map_hover.svg',
@@ -349,9 +354,11 @@ function init() {
                     });
 
                     placemark.events.add('balloonopen', () => {
+                        getStoreInfo(store)                        
                         const button = document.querySelector('.route-button');
                         button.addEventListener('click', () => {
                             let location = ymaps.geolocation.get();
+                            console
                             location.then(function (res) {
                                 let locationText = res.geoObjects.get(0).properties.get('text');
                                 control.routePanel.state.set({
@@ -373,8 +380,35 @@ function init() {
                         });
                     });
 
+                    function getStoreInfo(store){
+                        let html = ""
+                            html += `
+                            <div class='partner'>
+                                <button class='partner__backToList' onClick=${createPartnersList(openStores)}>Все партнеры</button>
+                               <p class='partner__engines'>${store.parts_available.map(part => part.name).join(`<span class='partner__engines-dot'></span>`)}</p>
+                               <h2 class='partner__name'>${store.name}</h2>
+                               <p class='partner__address'>${store.address}</p>
+                               <div class='partner__contacts'>
+                                 <a href=${store.phone} class="partner__phone">${store.phone}</a>
+                                 <a href=${store.website} class="partner__website target="_blank"">${store.website}</a>
+                               </div>
+                               <div class='partner__block'>
+                               ${store.time_open_weekdays || store.time_open_saturday || store.time_open_sunday ?
+                                    `<div class='partner__open'>
+                                        ${store.time_open_weekdays ? `<p class='partner__open-time'>c ${store.time_open_weekdays} до ${store.time_close_weekdays}</p>` : '<p></p>'}
+                                        ${store.time_open_saturday ? `<p class='partner__open-time'>cб: ${store.time_open_saturday} - ${store.time_close_saturday}</p>` : '<p></p>'}
+                                        ${store.time_open_sunday ? `<p class='partner__open-time'>воскр: ${store.time_open_sunday} - ${store.time_close_sunday}</p>` : '<p></p>'}
+                                    </div>` : '<p></p>'
+                                }
+                                    <button class="route-button">Маршрут</button>
+                               </div>
+                            </div> `;
+                            document.querySelector('.partners__container').innerHTML = html;
+
+                    }
+
                     map.geoObjects.add(placemark);
-                    createPartnersList(data)
+                    
                 });
             }
 

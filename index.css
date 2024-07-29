@@ -173,7 +173,7 @@ main {
     box-sizing: border-box;
     min-width: 32%;
     max-height: 90%;
-    padding: 20px 10px 24px 64px;
+    padding: 20px 0 24px 0;
     position: relative;
 }
 
@@ -285,8 +285,13 @@ main {
 
 .partner {
     border-bottom: 1px solid #858582;
-    margin-right: 20px;
-    padding-bottom: 24px;
+    padding: 16px 64px 24px 64px;
+}
+
+.partner:hover {
+    cursor: pointer;
+    background-color: #F5F5F5;
+    border-bottom: none;
 }
 
 .partner__engines {
@@ -295,6 +300,7 @@ main {
     font-style: normal;
     font-weight: 400;
     line-height: 130%;
+    margin-top: 0;
 }
 
 .partner__engines-dot {
@@ -404,13 +410,11 @@ main {
     margin: 0;
 }
 
-@media screen and (min-width: 750px) {
-    .map {
-        display: flex;
-        flex-direction: row;
-        padding-left: 10px;
-    }
+.map {
+    display: flex;
+    flex-direction: row;
 }
+
 
 .map__button {
     position: absolute;
@@ -425,6 +429,46 @@ main {
     background-repeat: no-repeat;
     background-position: 5% 50%;
     padding-left: 30px;
+}
+
+/* ballon */
+
+.ballon {
+    max-width: 220px;
+    padding: 2px 0 2px 2px;
+}
+
+.ballon__header {
+    color: #1347FF;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 130%;
+    margin: 0;
+}
+
+.balloon__text {
+    color: #4A4A4A;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 130%;
+    margin: 4px 0 0 0;
+}
+
+.ballon__status {
+    display: flex;
+    align-items: center;
+}
+
+.baloon__status-dot {
+    margin-top: 4px;
+    margin-right: 4px;
+    background-color: #2D9F5A;
+    height: 6px;
+    width: 6px;
+    border-radius: 50%;
+    align-self: center;
 }
 
 @media screen and (min-width: 750px) {
