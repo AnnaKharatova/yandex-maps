@@ -30,6 +30,9 @@ function init() {
     map.controls.remove('trafficControl');
     map.controls.remove('typeSelector');
     map.controls.remove("taxi");
+    map.controls.get('geolocationControl').options.set('float', 'right');
+    map.controls.get('routeButtonControl').options.set('float', 'right');
+    map.controls.get('searchControl').options.set('float', 'right');
 
     const control = map.controls.get('routeButtonControl');
 
@@ -354,7 +357,7 @@ function init() {
                     });
 
                     placemark.events.add('balloonopen', () => {
-                        getStoreInfo(store)                        
+                        getStoreInfo(store)
                         const button = document.querySelector('.route-button');
                         button.addEventListener('click', () => {
                             let location = ymaps.geolocation.get();
@@ -380,9 +383,9 @@ function init() {
                         });
                     });
 
-                    function getStoreInfo(store){
+                    function getStoreInfo(store) {
                         let html = ""
-                            html += `
+                        html += `
                             <div class='partner'>
                                 <button class='partner__backToList' onClick=${createPartnersList(openStores)}>Все партнеры</button>
                                <p class='partner__engines'>${store.parts_available.map(part => part.name).join(`<span class='partner__engines-dot'></span>`)}</p>
@@ -394,21 +397,21 @@ function init() {
                                </div>
                                <div class='partner__block'>
                                ${store.time_open_weekdays || store.time_open_saturday || store.time_open_sunday ?
-                                    `<div class='partner__open'>
+                                `<div class='partner__open'>
                                         ${store.time_open_weekdays ? `<p class='partner__open-time'>c ${store.time_open_weekdays} до ${store.time_close_weekdays}</p>` : '<p></p>'}
                                         ${store.time_open_saturday ? `<p class='partner__open-time'>cб: ${store.time_open_saturday} - ${store.time_close_saturday}</p>` : '<p></p>'}
                                         ${store.time_open_sunday ? `<p class='partner__open-time'>воскр: ${store.time_open_sunday} - ${store.time_close_sunday}</p>` : '<p></p>'}
                                     </div>` : '<p></p>'
-                                }
+                            }
                                     <button class="route-button">Маршрут</button>
                                </div>
                             </div> `;
-                            document.querySelector('.partners__container').innerHTML = html;
+                        document.querySelector('.partners__container').innerHTML = html;
 
                     }
 
                     map.geoObjects.add(placemark);
-                    
+
                 });
             }
 
